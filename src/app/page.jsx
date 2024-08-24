@@ -18,14 +18,8 @@ export default function Home () {
   }, [] );
 
   return (
-    <main className="w-screen h-screen">
-      {/* <nav className="float-left h-full p-5 border-r flex flex-col justify-between">
-        <div>
-          <AvatarContainer />
-        </div>
-
-        <ThemeToggle />
-      </nav> */}
+    <main className="w-screen h-screen flex items-center justify-center">
+      <p className="w-full text-center">Go to Chat from left Sidebar!</p>
     </main>
   );
 }
