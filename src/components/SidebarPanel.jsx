@@ -67,11 +67,11 @@ export function SidebarPanel ( { children } ) {
             <ThemeToggle />
             <SidebarLink
               link={ {
-                label: "Manu Arora",
+                label: "Am brothers",
                 href: "#",
                 icon: (
                   <Image
-                    src="https://assets.aceternity.com/manu.png"
+                    src="https://github.com/shadcn.png"
                     className="h-7 w-7 flex-shrink-0 rounded-full"
                     width={ 50 }
                     height={ 50 }
