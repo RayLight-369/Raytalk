@@ -24,7 +24,7 @@ const page = () => {
 
 
       {/* <div className="chat-section relative w-full px-6"> */ }
-      <ScrollArea className="chat-section relative w-full max-w-full flex flex-col flex-1 max-h-full px-5 pt-2 pb-1">
+      <ScrollArea className="chat-section relative w-full max-w-full flex flex-col flex-1 max-h-full px-5 pt-[2px] pb-1">
         { msgs.map( ( msg, i ) => (
           <div className='flex relative gap-4 w-auto max-w-[60%] py-4' key={ i }>
             <AvatarContainer />
