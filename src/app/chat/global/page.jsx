@@ -48,7 +48,7 @@ const page = () => {
             ) : (
               <div className={ 'flex relative gap-4 w-full max-w-[100%] py-4' } key={ i }>
                 <div className={ 'flex justify-center pt-1 w-full' }>
-                  <p className="name text-sm text-center text-muted-foreground">{ msg.name } just joined</p>
+                  <p className="name text-sm text-center text-muted-foreground">{ msg.name } just { msg.type }</p>
                 </div>
               </div>
             ) }

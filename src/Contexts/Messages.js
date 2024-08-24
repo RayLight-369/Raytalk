@@ -18,8 +18,8 @@ const Messages = ( { children } ) => {
       console.log( msg );
     } );
 
-    socket.on( "joined", ( id, name ) => {
-      setMsgs( prev => ( [ ...prev, { id, name, type: "note" } ] ) );
+    socket.on( "note", ( id, name, type ) => {
+      setMsgs( prev => ( [ ...prev, { id, name, type } ] ) );
     } );
 
     return () => {
