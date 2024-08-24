@@ -10,7 +10,10 @@ const Messages = ( { children } ) => {
 
   useEffect( () => {
 
-    socket.on( "msg", ( msg ) => setMsgs( prev => ( [ ...prev, msg ] ) ) );
+    socket.on( "msg", ( msg ) => {
+      setMsgs( prev => ( [ ...prev, msg ] ) );
+      console.log( msg );
+    } );
 
     return () => socket.off( "msg" );
 
