@@ -12,6 +12,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { MessageCircle } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
 
 export function SidebarPanel ( { children } ) {
   const links = [
@@ -63,6 +64,7 @@ export function SidebarPanel ( { children } ) {
             </div>
           </div>
           <div>
+            <ThemeToggle />
             <SidebarLink
               link={ {
                 label: "Manu Arora",

@@ -17,7 +17,7 @@ export function ResizableSidebar ( { left, right } ) {
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel defaultSize={ 75 }>
-        <div className="flex h-full items-center justify-center">
+        <div className="flex h-full w-full items-center justify-center">
           { right || <span className="font-semibold">Three</span> }
         </div>
       </ResizablePanel>
