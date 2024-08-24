@@ -36,13 +36,23 @@ const page = () => {
       <ScrollArea className="chat-section relative w-full max-w-full flex-1 max-h-full px-5 pt-[2px] pb-1">
         { msgs.map( ( msg, i ) => (
           // <div className={ cn( 'relative w-full h-full', msg.fromID == socket.id ? "float-right" : "" ) } key={ i }>
-          <div className={ cn( 'flex relative gap-4 w-full max-w-[60%] py-4', msg.fromID == socket.id ? "flex-row-reverse float-right" : "" ) } key={ i }>
-            <AvatarContainer />
-            <div className={ cn( 'flex flex-col gap-1 pt-1', msg.fromID == socket.id ? "items-end" : "" ) }>
-              <p className="name text-sm">{ msg.fromName }</p>
-              <p className="msg text-[0.8rem] leading-[1.24rem] rounded-md p-2 bg-muted break-all max-w-full">{ msg.value }</p>
-            </div>
-          </div>
+          <>
+            { msg.type != "note" ? (
+              <div className={ cn( 'flex relative gap-4 w-full max-w-[60%] py-4', msg.fromID == socket.id ? "flex-row-reverse float-right" : "" ) } key={ i }>
+                <AvatarContainer />
+                <div className={ cn( 'flex flex-col gap-1 pt-1', msg.fromID == socket.id ? "items-end" : "" ) }>
+                  <p className="name text-sm">{ msg.fromName }</p>
+                  <p className="msg text-[0.8rem] leading-[1.24rem] rounded-md p-2 bg-muted break-all max-w-full">{ msg.value }</p>
+                </div>
+              </div>
+            ) : (
+              <div className={ 'flex relative gap-4 w-full max-w-[100%] py-4' } key={ i }>
+                <div className={ 'flex justify-center pt-1' }>
+                  <p className="name text-sm text-center text-muted-foreground">{ msg.name } just joined</p>
+                </div>
+              </div>
+            ) }
+          </>
           // </div>
         ) ) }
       </ScrollArea>

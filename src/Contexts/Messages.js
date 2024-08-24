@@ -11,12 +11,22 @@ const Messages = ( { children } ) => {
 
   useEffect( () => {
 
+    socket.connect();
+
     socket.on( "msg", ( msg, fromID, fromName ) => {
-      setMsgs( prev => ( [ ...prev, { value: msg, fromID, fromName } ] ) );
+      setMsgs( prev => ( [ ...prev, { value: msg, fromID, fromName, type: "msg" } ] ) );
       console.log( msg );
     } );
 
-    return () => socket.off( "msg" );
+    socket.on( "joined", ( id, name ) => {
+      setMsgs( prev => ( [ ...prev, { id, name, type: "note" } ] ) );
+    } );
+
+    return () => {
+      socket.off( "msg" );
+      socket.off( "joined" );
+      socket.disconnect();
+    };
 
   }, [] );
 
