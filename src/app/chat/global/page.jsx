@@ -37,7 +37,7 @@ const page = () => {
         { msgs.map( ( msg, i ) => (
           // <div className={ cn( 'relative w-full h-full', msg.fromID == socket.id ? "float-right" : "" ) } key={ i }>
           <>
-            { msg.type != "note" ? (
+            { msg.type == "msg" ? (
               <div className={ cn( 'flex relative gap-4 w-full max-w-[60%] py-4', msg.fromID == socket.id ? "flex-row-reverse float-right" : "" ) } key={ i }>
                 <AvatarContainer />
                 <div className={ cn( 'flex flex-col gap-1 pt-1', msg.fromID == socket.id ? "items-end" : "" ) }>
