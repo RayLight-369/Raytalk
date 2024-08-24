@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { socket } from '@/socketio';
 import { EllipsisVertical } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const page = () => {
 
@@ -15,11 +15,17 @@ const page = () => {
   const { msgs, name } = useMessages();
   const router = useRouter();
 
+  const msgRef = useRef();
+
   useEffect( () => {
     setTimeout( () => {
       if ( !name.trim().length ) router.push( "/chat" );
     }, 2000 );
   }, [] );
+
+  useEffect( () => {
+    msgRef?.current?.scrollTo( 0, msgRef?.current?.scrollHeight );
+  }, [ msgs ] );
 
   return (
     <div className='w-full h-full relative overflow-y-hidden flex flex-col'>
@@ -33,7 +39,7 @@ const page = () => {
 
 
       {/* <div className="chat-section relative w-full px-6"> */ }
-      <ScrollArea className="chat-section relative w-full max-w-full flex-1 max-h-full px-5 pt-[2px] pb-1">
+      <ScrollArea className="chat-section relative w-full max-w-full flex-1 max-h-full px-5 pt-[2px] pb-1" divref={ msgRef }>
         { msgs.map( ( msg, i ) => (
           // <div className={ cn( 'relative w-full h-full', msg.fromID == socket.id ? "float-right" : "" ) } key={ i }>
           <>
