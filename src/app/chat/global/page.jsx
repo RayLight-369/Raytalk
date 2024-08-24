@@ -41,9 +41,8 @@ const page = () => {
       <div className='w-full py-2 mt-2 px-6 relative bottom-2 flex justify-center items-center'>
         <input onKeyDown={ ( e ) => {
           if ( e.key == "Enter" && e.target.value.trim().length ) {
-            socket.emit( "msg", inputValue, msg => {
-              console.log( "ack: ", msg );
-            } );
+            socket.emit( "msg", inputValue );
+            setInput( "" );
           }
         } } onChange={ ( e ) => setInput( e.target.value ) } value={ inputValue } type="text" placeholder='Type Message' className='px-3 py-2 text-sm w-full md:w-2/3 rounded-md border outline-none bg-background text-foreground' />
       </div>
