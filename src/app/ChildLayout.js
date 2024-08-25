@@ -59,6 +59,7 @@ export default function ChildLayout () {
         setUnseenMessages( newMessages.length );
         setLastSeenMessageIndex( msgs.length - 1 );
       } else {
+        setUnseenMessages( 0 );
         setLastSeenMessageIndex( msgs.length - 1 );
       }
     }
