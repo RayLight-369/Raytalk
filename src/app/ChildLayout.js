@@ -1,16 +1,68 @@
 "use client";
 
-import Messages from "@/Contexts/Messages";
+import Messages, { useMessages } from "@/Contexts/Messages";
 import { socket } from "@/socketio";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
+const playSound = () => {
+  const audio = new Audio( "/sound.mp3" );
+  audio.play();
+};
 
+export default function ChildLayout () {
 
-export default function ChildLayout ( { children } ) {
+  const { msgs, unseenMessages, setUnseenMessages } = useMessages();
+  const [ lastSeenMessageIndex, setLastSeenMessageIndex ] = useState( null );
 
-  return (
-    <Messages>
-      { children }
-    </Messages>
-  );
+  // useEffect( () => {
+  //   if ( msgs.length > 0 ) {
+  //     setLastSeenMessageIndex( msgs.length - 1 );
+  //   }
+  // }, [] );
+
+  // useEffect( () => {
+  //   const handleVisibilityChange = () => {
+  //     if ( document.visibilityState === 'visible' ) {
+
+  //       console.log( unseenMessages );
+
+  //       const timeOut = setTimeout( () => {
+
+  //         setLastSeenMessageIndex( msgs.length - 1 );
+  //         setUnseenMessages( 0 );
+
+  //         clearTimeout( timeOut );
+
+  //       }, 500 );
+
+  //     } else {
+  //       if ( msgs.length > lastSeenMessageIndex + 1 ) {
+  //         setUnseenMessages( msgs.length - lastSeenMessageIndex - 1 );
+  //         playSound();
+  //       }
+  //     }
+  //   };
+
+  //   document.addEventListener( 'visibilitychange', handleVisibilityChange );
+
+  //   return () => {
+  //     document.removeEventListener( 'visibilitychange', handleVisibilityChange );
+  //   };
+  // }, [ msgs, lastSeenMessageIndex ] );
+
+  useEffect( () => {
+    if ( msgs.length > lastSeenMessageIndex + 1 ) {
+      const newMessages = msgs.slice( lastSeenMessageIndex + 1 );
+      const hasNewUnseenMessages = newMessages.some( msg => msg.fromID !== socket.id );
+
+      if ( hasNewUnseenMessages ) {
+        playSound();
+        setLastSeenMessageIndex( msgs.length - 1 );
+      } else {
+        setLastSeenMessageIndex( msgs.length - 1 );
+      }
+    }
+  }, [ msgs, lastSeenMessageIndex ] );
+
+  return null;
 }

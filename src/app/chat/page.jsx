@@ -2,7 +2,7 @@
 
 import { PopUp } from '@/components/PopUp';
 import { useMessages } from '@/Contexts/Messages';
-import React from 'react';
+import { useEffect, useState } from 'react';
 
 const page = () => {
 
@@ -10,7 +10,11 @@ const page = () => {
 
   return (
     <div>
-      <PopUp setName={ setName } />
+      { !name.trim().length ? (
+        <PopUp setName={ setName } />
+      ) : (
+        <p>Currently there is only global channel</p>
+      ) }
     </div>
   );
 };

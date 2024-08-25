@@ -1,3 +1,5 @@
+"use client";
+
 import { socket } from '@/socketio';
 import { createContext, useContext, useEffect, useState } from 'react';
 
@@ -8,6 +10,10 @@ export const useMessages = () => useContext( MessagesContext );
 const Messages = ( { children } ) => {
   const [ msgs, setMsgs ] = useState( [] );
   const [ name, setName ] = useState( "" );
+  const [ CONFIG, setCONFIG ] = useState( {
+    displayMode: "classic",
+  } );
+  const [ unseenMessages, setUnseenMessages ] = useState( 0 );
 
   useEffect( () => {
 
@@ -31,7 +37,7 @@ const Messages = ( { children } ) => {
   }, [] );
 
   return (
-    <MessagesContext.Provider value={ { msgs, setMsgs, name, setName } }>
+    <MessagesContext.Provider value={ { msgs, setMsgs, name, setName, CONFIG, setCONFIG, unseenMessages, setUnseenMessages } }>
       { children }
     </MessagesContext.Provider>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { AvatarContainer } from '@/components/AvatarContainer';
+import Message from '@/components/Message';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useMessages } from '@/Contexts/Messages';
 import { cn } from '@/lib/utils';
@@ -12,9 +13,8 @@ import { useEffect, useRef, useState } from 'react';
 const page = () => {
 
   const [ inputValue, setInput ] = useState( "" );
-  const { msgs, name } = useMessages();
+  const { msgs, name, CONFIG } = useMessages();
   const router = useRouter();
-
   const msgRef = useRef();
 
   useEffect( () => {
@@ -24,7 +24,11 @@ const page = () => {
   }, [] );
 
   useEffect( () => {
-    msgRef?.current?.scrollTo( 0, msgRef?.current?.scrollHeight );
+
+    const isNearBottom = msgRef.current.scrollHeight - msgRef.current.clientHeight - msgRef.current.scrollTop <= 250;
+
+    if ( isNearBottom ) msgRef?.current?.scrollTo( 0, msgRef?.current?.scrollHeight );
+
   }, [ msgs ] );
 
   return (
@@ -39,20 +43,14 @@ const page = () => {
 
 
       {/* <div className="chat-section relative w-full px-6"> */ }
-      <ScrollArea className="chat-section relative w-full max-w-full flex-1 max-h-full px-5 pt-[2px] pb-1" divref={ msgRef }>
+      <ScrollArea className={ cn( "chat-section relative w-full max-w-full flex-1 max-h-full pt-[2px] pb-1", CONFIG.displayMode == "casual" ? "px-5" : "" ) } divref={ msgRef }>
         { msgs.map( ( msg, i ) => (
           // <div className={ cn( 'relative w-full h-full', msg.fromID == socket.id ? "float-right" : "" ) } key={ i }>
           <>
             { msg.type == "msg" ? (
-              <div className={ cn( 'flex relative gap-4 w-full max-w-[60%] py-4', msg.fromID == socket.id ? "flex-row-reverse float-right" : "" ) } key={ i }>
-                <AvatarContainer />
-                <div className={ cn( 'flex flex-col gap-1 pt-1', msg.fromID == socket.id ? "items-end" : "" ) }>
-                  <p className="name text-sm">{ msg.fromName }</p>
-                  <p className="msg text-[0.8rem] leading-[1.24rem] rounded-md p-2 bg-muted break-all max-w-full">{ msg.value }</p>
-                </div>
-              </div>
+              <Message msg={ msg } socket={ socket } displayMode={ CONFIG.displayMode } key={ i } previousMsgFromSameUser={ i > 0 && !!( msgs[ i - 1 ]?.fromID == msg.fromID ) } />
             ) : (
-              <div className={ 'flex relative gap-4 w-full max-w-[100%] py-4' } key={ i }>
+              <div className={ 'flex relative gap-4 w-full max-w-[100%] py-4 border-t first:border-none' } key={ i }>
                 <div className={ 'flex justify-center pt-1 w-full' }>
                   <p className="name text-sm text-center text-muted-foreground">{ msg.name } just { msg.type }</p>
                 </div>

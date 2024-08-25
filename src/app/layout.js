@@ -3,6 +3,7 @@ import "./globals.css";
 import ChildLayout from "./ChildLayout";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { SidebarPanel } from "@/components/SidebarPanel";
+import Messages from "@/Contexts/Messages";
 
 const inter = Inter( { subsets: [ "latin" ] } );
 
@@ -20,11 +21,12 @@ export default function RootLayout ( { children } ) {
           defaultTheme="system"
           enableSystem
         >
-          <ChildLayout>
+          <Messages>
+            <ChildLayout />
             <SidebarPanel>
               { children }
             </SidebarPanel>
-          </ChildLayout>
+          </Messages>
         </ThemeProvider>
       </body>
     </html>

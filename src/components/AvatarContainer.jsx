@@ -4,9 +4,9 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar";
 
-export function AvatarContainer () {
+export function AvatarContainer ( { className } ) {
   return (
-    <Avatar>
+    <Avatar className={ className }>
       <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
       <AvatarFallback>CN</AvatarFallback>
     </Avatar>
