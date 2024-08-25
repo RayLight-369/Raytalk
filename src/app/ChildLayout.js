@@ -33,7 +33,7 @@ export default function ChildLayout () {
 
           clearTimeout( timeOut );
 
-        }, 500 );
+        }, 2000 );
 
       } else {
         if ( msgs.length > lastSeenMessageIndex + 1 ) {
@@ -56,6 +56,7 @@ export default function ChildLayout () {
 
       if ( hasNewUnseenMessages ) {
         playSound();
+        setUnseenMessages( newMessages.length );
         setLastSeenMessageIndex( msgs.length - 1 );
       } else {
         setLastSeenMessageIndex( msgs.length - 1 );

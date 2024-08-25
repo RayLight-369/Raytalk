@@ -16,6 +16,9 @@ const AccountsSection = () => {
   const pathName = usePathname();
   const { name, msgs, unseenMessages } = useMessages();
 
+  useEffect( () => {
+    console.log( unseenMessages );
+  }, [ unseenMessages ] );
 
   return (
     <div className='w-full h-full'>
