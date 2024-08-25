@@ -14,41 +14,40 @@ export default function ChildLayout () {
   const { msgs, unseenMessages, setUnseenMessages } = useMessages();
   const [ lastSeenMessageIndex, setLastSeenMessageIndex ] = useState( null );
 
-  // useEffect( () => {
-  //   if ( msgs.length > 0 ) {
-  //     setLastSeenMessageIndex( msgs.length - 1 );
-  //   }
-  // }, [] );
+  useEffect( () => {
+    if ( msgs.length > 0 ) {
+      setLastSeenMessageIndex( msgs.length - 1 );
+    }
+  }, [] );
 
-  // useEffect( () => {
-  //   const handleVisibilityChange = () => {
-  //     if ( document.visibilityState === 'visible' ) {
+  useEffect( () => {
+    const handleVisibilityChange = () => {
+      if ( document.visibilityState === 'visible' ) {
 
-  //       console.log( unseenMessages );
+        console.log( unseenMessages );
 
-  //       const timeOut = setTimeout( () => {
+        const timeOut = setTimeout( () => {
 
-  //         setLastSeenMessageIndex( msgs.length - 1 );
-  //         setUnseenMessages( 0 );
+          setLastSeenMessageIndex( msgs.length - 1 );
+          setUnseenMessages( 0 );
 
-  //         clearTimeout( timeOut );
+          clearTimeout( timeOut );
 
-  //       }, 500 );
+        }, 500 );
 
-  //     } else {
-  //       if ( msgs.length > lastSeenMessageIndex + 1 ) {
-  //         setUnseenMessages( msgs.length - lastSeenMessageIndex - 1 );
-  //         playSound();
-  //       }
-  //     }
-  //   };
+      } else {
+        if ( msgs.length > lastSeenMessageIndex + 1 ) {
+          setUnseenMessages( msgs.length - lastSeenMessageIndex - 1 );
+        }
+      }
+    };
 
-  //   document.addEventListener( 'visibilitychange', handleVisibilityChange );
+    document.addEventListener( 'visibilitychange', handleVisibilityChange );
 
-  //   return () => {
-  //     document.removeEventListener( 'visibilitychange', handleVisibilityChange );
-  //   };
-  // }, [ msgs, lastSeenMessageIndex ] );
+    return () => {
+      document.removeEventListener( 'visibilitychange', handleVisibilityChange );
+    };
+  }, [ msgs, lastSeenMessageIndex ] );
 
   useEffect( () => {
     if ( msgs.length > lastSeenMessageIndex + 1 ) {
