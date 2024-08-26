@@ -14,6 +14,7 @@ const Messages = ( { children } ) => {
     displayMode: "classic",
   } );
   const [ unseenMessages, setUnseenMessages ] = useState( 0 );
+  const [ totalUsers, setTotalUsers ] = useState( [] );
 
   useEffect( () => {
 
@@ -24,7 +25,15 @@ const Messages = ( { children } ) => {
       console.log( msg );
     } );
 
-    socket.on( "note", ( id, name, type ) => {
+    socket.on( "note", ( id, name, type, totalUsers ) => {
+
+      if ( type.includes( "join" ) ) {
+        if ( id == socket.id ) setTotalUsers( totalUsers );
+        else setTotalUsers( prev => ( [ name, ...prev ] ) );
+      } else {
+        setTotalUsers( prev => prev.filter( socketName => socketName != "name" ) );
+      }
+
       setMsgs( prev => ( [ ...prev, { id, name, type } ] ) );
     } );
 
@@ -37,7 +46,7 @@ const Messages = ( { children } ) => {
   }, [] );
 
   return (
-    <MessagesContext.Provider value={ { msgs, setMsgs, name, setName, CONFIG, setCONFIG, unseenMessages, setUnseenMessages } }>
+    <MessagesContext.Provider value={ { msgs, setMsgs, name, setName, CONFIG, setCONFIG, unseenMessages, setUnseenMessages, totalUsers, setTotalUsers } }>
       { children }
     </MessagesContext.Provider>
   );

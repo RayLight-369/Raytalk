@@ -2,6 +2,7 @@
 
 import { AvatarContainer } from '@/components/AvatarContainer';
 import Message from '@/components/Message';
+import TotalUsersSideSheet from '@/components/TotalUsersSideSheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useMessages } from '@/Contexts/Messages';
 import { cn } from '@/lib/utils';
@@ -14,7 +15,7 @@ const page = () => {
 
   const [ inputValue, setInput ] = useState( "" );
   const [ typingUsers, setTypingUsers ] = useState( [] );
-  const { msgs, name, CONFIG } = useMessages();
+  const { msgs, name, CONFIG, totalUsers } = useMessages();
   const router = useRouter();
   const msgRef = useRef();
   const typingTimeoutRef = useRef( null );
@@ -74,7 +75,10 @@ const page = () => {
           <AvatarContainer />
           <h1 className='text-[1.05rem]'>Global</h1>
         </div>
-        <EllipsisVertical />
+        <div className='flex gap-3 items-center'>
+          <TotalUsersSideSheet totalUsers={ totalUsers } />
+          <EllipsisVertical />
+        </div>
       </div>
 
 
