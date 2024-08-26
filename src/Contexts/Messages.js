@@ -10,6 +10,7 @@ export const useMessages = () => useContext( MessagesContext );
 const Messages = ( { children } ) => {
   const [ msgs, setMsgs ] = useState( [] );
   const [ name, setName ] = useState( "" );
+  const [ isMobile, setIsMobile ] = useState( false );
   const [ CONFIG, setCONFIG ] = useState( {
     displayMode: "classic",
   } );
@@ -37,6 +38,11 @@ const Messages = ( { children } ) => {
       setMsgs( prev => ( [ ...prev, { id, name, type } ] ) );
     } );
 
+
+    const handleResize = () => setIsMobile( window.innerWidth <= 768 );
+
+    handleResize();
+
     return () => {
       socket.off( "msg" );
       socket.off( "note" );
@@ -46,7 +52,7 @@ const Messages = ( { children } ) => {
   }, [] );
 
   return (
-    <MessagesContext.Provider value={ { msgs, setMsgs, name, setName, CONFIG, setCONFIG, unseenMessages, setUnseenMessages, totalUsers, setTotalUsers } }>
+    <MessagesContext.Provider value={ { msgs, setMsgs, name, setName, CONFIG, setCONFIG, unseenMessages, setUnseenMessages, isMobile, totalUsers, setTotalUsers } }>
       { children }
     </MessagesContext.Provider>
   );

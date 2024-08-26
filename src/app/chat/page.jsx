@@ -2,18 +2,25 @@
 
 import { PopUp } from '@/components/PopUp';
 import { useMessages } from '@/Contexts/Messages';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 const page = () => {
 
   const { name, setName } = useMessages();
+  const router = useRouter();
+
+  useEffect( () => {
+    router.prefetch( "/chat/global" );
+    if ( name.trim().length ) {
+      router.push( "/chat/global" );
+    }
+  }, [] );
 
   return (
     <div>
-      { !name.trim().length ? (
+      { !name.trim().length && (
         <PopUp setName={ setName } />
-      ) : (
-        <p>Currently there is only global channel</p>
       ) }
     </div>
   );

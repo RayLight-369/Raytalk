@@ -46,11 +46,15 @@ export function PopUp ( { setName } ) {
             <DialogFooter>
               <DialogClose asChild>
                 <Button type="button" onClick={ () => {
-                  socket.emit( "joined", socket.id, name );
+                  if ( name.trim().length ) {
+                    socket.emit( "joined", socket.id, name );
 
-                  setName( name );
-                  setState( false );
-                  router.push( "/chat/global" );
+                    setName( name );
+                    setState( false );
+                    router.push( "/chat/global" );
+                  } else {
+                    alert( "Annay koi naam daal apna, school mein kabhi khaali jaga pur ni ki kya..." );
+                  }
                 } }>Submit</Button>
               </DialogClose>
             </DialogFooter>

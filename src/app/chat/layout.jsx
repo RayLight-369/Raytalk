@@ -8,17 +8,12 @@ import { cn } from '@/lib/utils';
 import { ChevronRight, EllipsisVertical } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState, useEffect } from 'react';
 
 
 const AccountsSection = () => {
 
   const pathName = usePathname();
-  const { name, msgs, unseenMessages } = useMessages();
-
-  useEffect( () => {
-    console.log( unseenMessages );
-  }, [ unseenMessages ] );
+  const { name, unseenMessages } = useMessages();
 
   return (
     <div className='w-full h-full'>
@@ -48,8 +43,15 @@ const AccountsSection = () => {
 };
 
 const layout = ( { children } ) => {
+
+  const { isMobile } = useMessages();
+
   return (
-    <ResizableSidebar left={ <AccountsSection /> } right={ children } />
+    <>
+      { isMobile ? <ResizableSidebar left={ <AccountsSection /> } right={ children } /> : (
+        <> { children } </>
+      ) }
+    </>
   );
 };
 
