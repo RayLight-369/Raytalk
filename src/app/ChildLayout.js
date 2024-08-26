@@ -10,6 +10,37 @@ const playSound = () => {
   const audio = new Audio( "/sound.mp3" );
   audio.play();
 };
+const updateFavicon = ( count ) => {
+  const canvas = document.createElement( 'canvas' );
+  canvas.width = 48;
+  canvas.height = 48;
+
+  const ctx = canvas.getContext( '2d' );
+  const img = new Image();
+  img.src = '/favicon.ico';  // Replace with your original favicon path
+  img.onload = () => {
+    ctx.drawImage( img, 0, 0, 48, 48 );
+
+    if ( count > 0 ) {
+      ctx.fillStyle = 'red';
+      ctx.beginPath();
+      ctx.arc( 32, 12, 12, 0, 2 * Math.PI );
+      ctx.fill();
+
+      ctx.font = '20px Arial';
+      ctx.fillStyle = 'white';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText( count, 32, 12 );
+    }
+
+    const link = document.querySelector( "link[rel*='icon']" ) || document.createElement( 'link' );
+    link.type = 'image/x-icon';
+    link.rel = 'shortcut icon';
+    link.href = canvas.toDataURL( 'image/x-icon' );
+    document.getElementsByTagName( 'head' )[ 0 ].appendChild( link );
+  };
+};
 
 export default function ChildLayout () {
 
@@ -35,14 +66,18 @@ export default function ChildLayout () {
 
       if ( visibility ) {
         const timeout = setTimeout( () => {
+          setLastSeenMessageIndex( msgs.length - 1 );
           setUnseenMessages( 0 );
           clearTimeout( timeout );
         }, 2000 );
       };
 
-      setLastSeenMessageIndex( msgs.length - 1 );
     }
   }, [ msgs, visibility ] );
+
+  useEffect( () => {
+    updateFavicon( unseenMessages );
+  }, [ unseenMessages ] );
 
   return null;
 }
