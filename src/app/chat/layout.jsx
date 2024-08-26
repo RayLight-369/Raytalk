@@ -48,7 +48,7 @@ const layout = ( { children } ) => {
 
   return (
     <>
-      { isMobile ? <ResizableSidebar left={ <AccountsSection /> } right={ children } /> : (
+      { !isMobile ? <ResizableSidebar left={ <AccountsSection /> } right={ children } /> : (
         <> { children } </>
       ) }
     </>
