@@ -7,11 +7,12 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { useMessages } from '@/Contexts/Messages';
 import { cn } from '@/lib/utils';
 import { socket } from '@/socketio';
-import { EllipsisVertical, X } from 'lucide-react';
+import { EllipsisVertical, Link, X } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import imageCompression from "browser-image-compression";
+import { Button } from '@/components/ui/button';
 
 
 
@@ -24,31 +25,29 @@ const page = () => {
   const msgRef = useRef();
   const typingTimeoutRef = useRef( null );
   const [ media, setMedia ] = useState( [] );
-  const handlePaste = useCallback( async ( e ) => {
 
-    const clipboardItems = e.clipboardData.items;
+  const handlePaste = async ( e ) => {
+
+    const items = e.type == "paste" ? e.clipboardData.items : e.target.files;
 
     if ( media.length > 9 ) {
       alert( "vey bas kar de hon..." );
       return;
     }
 
-    for ( let item of clipboardItems ) {
+    for ( let item of items ) {
       if ( item.type.startsWith( 'image/' ) ) {
-        // if ( media.length <= 9 ) {
-        const imageFile = item.getAsFile();
+        const imageFile = e.type == "paste" ? item.getAsFile() : item;
 
-        // Compress the image
         const options = {
-          maxSizeMB: 1, // Maximum size in MB
-          maxWidthOrHeight: 145, // Maximum width or height
-          useWebWorker: true, // Use multi-threading (web workers)
+          maxSizeMB: 1,
+          maxWidthOrHeight: 145,
+          useWebWorker: true,
         };
 
         try {
           const compressedFile = await imageCompression( imageFile, options );
 
-          // Convert compressed image to Base64
           const reader = new FileReader();
           reader.onload = ( e ) => {
             console.log( e.target.result );
@@ -68,11 +67,8 @@ const page = () => {
           console.error( "Error compressing the image:", error );
         }
       }
-      // } else {
-      //   alert( "vey bas kar de hon..." );
-      // }
     }
-  }, [ media ] );
+  };
 
   const handleTyping = ( e ) => {
     setInput( e.target.value );
@@ -209,14 +205,23 @@ const page = () => {
               </ScrollArea>
             </div>
           ) }
-          <input
-            onKeyDown={ handleInput }
-            onChange={ handleTyping }
-            value={ inputValue }
-            type="text"
-            placeholder='Type Message'
-            className='px-3 py-2 z-10 text-sm w-full rounded-md border outline-none bg-background text-foreground'
-          />
+          <div className='w-full flex gap-3'>
+            <Button className="text-sm" onClick={ () => {
+              const fileInput = document.querySelector( "input#media-input" );
+              fileInput.click();
+            } }>
+              <Link className='text-sm w-[20px] aspect-square' />
+            </Button>
+            <input type="file" name="media" id="media-input" className='hidden' multiple accept='image/*' max={ 9 - media.length } onChange={ handlePaste } />
+            <input
+              onKeyDown={ handleInput }
+              onChange={ handleTyping }
+              value={ inputValue }
+              type="text"
+              placeholder='Type Message'
+              className='px-3 py-2 z-10 text-sm w-full rounded-md border outline-none bg-background text-foreground'
+            />
+          </div>
         </div>
       </div>
     </div>
