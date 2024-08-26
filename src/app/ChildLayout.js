@@ -69,7 +69,7 @@ export default function ChildLayout () {
           setLastSeenMessageIndex( msgs.length - 1 );
           setUnseenMessages( 0 );
           clearTimeout( timeout );
-        }, 2000 );
+        }, 1200 );
       };
 
     }

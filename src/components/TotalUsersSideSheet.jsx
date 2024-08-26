@@ -18,7 +18,7 @@ export default function TotalUsersSideSheet ( { totalUsers } ) {
         <SheetHeader>
           <SheetTitle>Joined Users</SheetTitle>
           <SheetDescription>
-            <ol>
+            <ol className="list-[auto] flex flex-col gap-2 pl-3 pt-2">
               { totalUsers?.map( ( user, i ) => (
                 <li className="name text-sm">{ user }</li>
               ) ) }

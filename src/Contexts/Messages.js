@@ -31,7 +31,7 @@ const Messages = ( { children } ) => {
         if ( id == socket.id ) setTotalUsers( totalUsers );
         else setTotalUsers( prev => ( [ name, ...prev ] ) );
       } else {
-        setTotalUsers( prev => prev.filter( socketName => socketName != "name" ) );
+        setTotalUsers( prev => prev.filter( socketName => socketName != name ) );
       }
 
       setMsgs( prev => ( [ ...prev, { id, name, type } ] ) );
@@ -39,7 +39,7 @@ const Messages = ( { children } ) => {
 
     return () => {
       socket.off( "msg" );
-      socket.off( "joined" );
+      socket.off( "note" );
       socket.disconnect();
     };
 
