@@ -30,7 +30,13 @@ const Messages = ( { children } ) => {
 
       if ( type.includes( "join" ) ) {
         if ( id == socket.id ) setTotalUsers( totalUsers );
-        else setTotalUsers( prev => ( [ name, ...prev ] ) );
+        else setTotalUsers( prev => {
+          if ( name.trim().length ) {
+            return ( [ name, ...prev ] );
+          }
+
+          return prev;
+        } );
       } else {
         setTotalUsers( prev => prev.filter( socketName => socketName != name ) );
       }
