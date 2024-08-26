@@ -35,10 +35,10 @@ const page = () => {
   };
 
   useEffect( () => {
-    const timeout = setTimeout( () => {
-      if ( !name.trim().length ) router.push( "/chat" );
-      clearTimeout( timeout );
-    }, 2000 );
+    // const timeout = setTimeout( () => {
+    if ( !name.trim().length ) router.push( "/chat" );
+    // clearTimeout( timeout );
+    // }, 000 );
 
 
     socket.on( "typing", ( user ) => {

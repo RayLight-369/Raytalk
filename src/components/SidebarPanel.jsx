@@ -13,8 +13,12 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { MessageCircle } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
+// import { useMessages } from "@/Contexts/Messages";
 
 export function SidebarPanel ( { children } ) {
+
+  // const { isMobile } = useMessages();
+
   const links = [
     {
       label: "Chat",
