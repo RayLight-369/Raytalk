@@ -10,7 +10,7 @@ import { socket } from '@/socketio';
 import { EllipsisVertical, X } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import imageCompression from "browser-image-compression";
 
 
@@ -24,6 +24,55 @@ const page = () => {
   const msgRef = useRef();
   const typingTimeoutRef = useRef( null );
   const [ media, setMedia ] = useState( [] );
+  const handlePaste = useCallback( async ( e ) => {
+
+    const clipboardItems = e.clipboardData.items;
+
+    if ( media.length > 9 ) {
+      alert( "vey bas kar de hon..." );
+      return;
+    }
+
+    for ( let item of clipboardItems ) {
+      if ( item.type.startsWith( 'image/' ) ) {
+        // if ( media.length <= 9 ) {
+        const imageFile = item.getAsFile();
+
+        // Compress the image
+        const options = {
+          maxSizeMB: 1, // Maximum size in MB
+          maxWidthOrHeight: 145, // Maximum width or height
+          useWebWorker: true, // Use multi-threading (web workers)
+        };
+
+        try {
+          const compressedFile = await imageCompression( imageFile, options );
+
+          // Convert compressed image to Base64
+          const reader = new FileReader();
+          reader.onload = ( e ) => {
+            console.log( e.target.result );
+            if ( media.length < 9 ) {
+              setMedia( prev => {
+                if ( prev.length < 9 ) {
+                  return [ e.target.result, ...prev ];
+                } else {
+                  alert( "vey bas kar de..." );
+                  return [ ...prev ];
+                }
+              } );
+            }
+          };
+          reader.readAsDataURL( compressedFile );
+        } catch ( error ) {
+          console.error( "Error compressing the image:", error );
+        }
+      }
+      // } else {
+      //   alert( "vey bas kar de hon..." );
+      // }
+    }
+  }, [ media ] );
 
   const handleTyping = ( e ) => {
     setInput( e.target.value );
@@ -57,37 +106,7 @@ const page = () => {
     // clearTimeout( timeout );
     // }, 000 );
 
-    const handlePaste = async ( e ) => {
 
-      const clipboardItems = e.clipboardData.items;
-
-      for ( let item of clipboardItems ) {
-        if ( item.type.startsWith( 'image/' ) ) {
-          const imageFile = item.getAsFile();
-
-          // Compress the image
-          const options = {
-            maxSizeMB: 1, // Maximum size in MB
-            maxWidthOrHeight: 145, // Maximum width or height
-            useWebWorker: true, // Use multi-threading (web workers)
-          };
-
-          try {
-            const compressedFile = await imageCompression( imageFile, options );
-
-            // Convert compressed image to Base64
-            const reader = new FileReader();
-            reader.onload = ( e ) => {
-              console.log( e.target.result );
-              setMedia( prev => ( [ e.target.result, ...prev ] ) ); // Store the compressed image as a Base64 string
-            };
-            reader.readAsDataURL( compressedFile );
-          } catch ( error ) {
-            console.error( "Error compressing the image:", error );
-          }
-        }
-      }
-    };
 
     document.addEventListener( "paste", handlePaste );
     // document.addEventListener( "keydown", handleInput );
