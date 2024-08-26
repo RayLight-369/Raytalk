@@ -21,9 +21,8 @@ const Messages = ( { children } ) => {
 
     socket.connect();
 
-    socket.on( "msg", ( msg, fromID, fromName ) => {
-      setMsgs( prev => ( [ ...prev, { value: msg, fromID, fromName, type: "msg" } ] ) );
-      console.log( msg );
+    socket.on( "msg", ( msg, fromID, fromName, media ) => {
+      setMsgs( prev => ( [ ...prev, { value: msg, fromID, fromName, media, type: "msg" } ] ) );
     } );
 
     socket.on( "note", ( id, name, type, totalUsers ) => {

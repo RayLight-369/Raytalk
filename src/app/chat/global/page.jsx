@@ -3,13 +3,17 @@
 import { AvatarContainer } from '@/components/AvatarContainer';
 import Message from '@/components/Message';
 import TotalUsersSideSheet from '@/components/TotalUsersSideSheet';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { useMessages } from '@/Contexts/Messages';
 import { cn } from '@/lib/utils';
 import { socket } from '@/socketio';
-import { EllipsisVertical } from 'lucide-react';
+import { EllipsisVertical, X } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import imageCompression from "browser-image-compression";
+
+
 
 const page = () => {
 
@@ -19,6 +23,7 @@ const page = () => {
   const router = useRouter();
   const msgRef = useRef();
   const typingTimeoutRef = useRef( null );
+  const [ media, setMedia ] = useState( [] );
 
   const handleTyping = ( e ) => {
     setInput( e.target.value );
@@ -34,11 +39,57 @@ const page = () => {
     }, 1200 );
   };
 
+  const handleInput = ( e ) => {
+    if ( e.key == "Enter" && ( e.target.value.trim().length || media.length ) ) {
+      socket.emit( "msg", inputValue, socket.id, name, media );
+      socket.emit( "stop typing", name );
+      setMedia( [] );
+      setInput( "" );
+    }
+  };
+
+  const handlePaste = async ( e ) => {
+
+    const clipboardItems = e.clipboardData.items;
+
+    for ( let item of clipboardItems ) {
+      if ( item.type.startsWith( 'image/' ) ) {
+        const imageFile = item.getAsFile();
+
+        // Compress the image
+        const options = {
+          maxSizeMB: 1, // Maximum size in MB
+          maxWidthOrHeight: 145, // Maximum width or height
+          useWebWorker: true, // Use multi-threading (web workers)
+        };
+
+        try {
+          const compressedFile = await imageCompression( imageFile, options );
+
+          // Convert compressed image to Base64
+          const reader = new FileReader();
+          reader.onload = ( e ) => {
+            console.log( e.target.result );
+            setMedia( prev => ( [ e.target.result, ...prev ] ) ); // Store the compressed image as a Base64 string
+          };
+          reader.readAsDataURL( compressedFile );
+        } catch ( error ) {
+          console.error( "Error compressing the image:", error );
+        }
+      }
+    }
+  };
+
+
   useEffect( () => {
     // const timeout = setTimeout( () => {
     if ( !name.trim().length ) router.push( "/chat" );
     // clearTimeout( timeout );
     // }, 000 );
+
+    document.addEventListener( "paste", handlePaste );
+    document.addEventListener( "keydown", handleInput );
+
 
 
     socket.on( "typing", ( user ) => {
@@ -57,6 +108,8 @@ const page = () => {
     return () => {
       socket.off( "typing" );
       socket.off( "stop typing" );
+      document.removeEventListener( "paste", handlePaste );
+      document.removeEventListener( "keydown", handleInput );
     };
   }, [] );
 
@@ -117,13 +170,32 @@ const page = () => {
             <p className='text-[0.785rem]'>A lot of people are tying...</p>
           ) }
         </div>
-        <input onKeyDown={ ( e ) => {
-          if ( e.key == "Enter" && e.target.value.trim().length ) {
-            socket.emit( "msg", inputValue, socket.id, name );
-            socket.emit( "stop typing", name );
-            setInput( "" );
-          }
-        } } onChange={ handleTyping } value={ inputValue } type="text" placeholder='Type Message' className='px-3 py-2 z-10 text-sm w-full rounded-md border outline-none bg-background text-foreground' />
+        <div className='flex flex-col gap-3 w-full'>
+          { !!media.length && (
+            <div className='flex items-center gap-3 p-3 px-4 rounded-lg h-32 w-fit max-w-full'>
+              <ScrollArea className="w-full h-full whitespace-nowrap rounded-md [&>*>*]:h-full">
+                <div className='flex h-full gap-3 py-3 px-4 items-center'>
+                  { media.map( ( img, i ) => (
+                    <div id="img" className='w-36 h-full relative' key={ i }>
+                      <Image width={ 170 } height={ 145 } src={ img } className='w-full h-20 p-2 object-contain rounded-md bg-muted' />
+                      <X className='text-foreground rounded-md border p-1 absolute top-1 right-1 hover:bg-background' onClick={ () => {
+                        setMedia( prev => prev.filter( ( _, j ) => i != j ) );
+                      } } />
+                    </div>
+                  ) ) }
+                </div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+            </div>
+          ) }
+          <input
+            onChange={ handleTyping }
+            value={ inputValue }
+            type="text"
+            placeholder='Type Message'
+            className='px-3 py-2 z-10 text-sm w-full rounded-md border outline-none bg-background text-foreground'
+          />
+        </div>
       </div>
     </div>
   );
