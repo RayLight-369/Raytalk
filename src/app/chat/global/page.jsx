@@ -41,6 +41,7 @@ const page = () => {
 
   const handleInput = ( e ) => {
     if ( e.key == "Enter" && ( e.target.value.trim().length || media.length ) ) {
+
       socket.emit( "msg", inputValue, socket.id, name, media );
       socket.emit( "stop typing", name );
       setMedia( [] );
@@ -48,37 +49,6 @@ const page = () => {
     }
   };
 
-  const handlePaste = async ( e ) => {
-
-    const clipboardItems = e.clipboardData.items;
-
-    for ( let item of clipboardItems ) {
-      if ( item.type.startsWith( 'image/' ) ) {
-        const imageFile = item.getAsFile();
-
-        // Compress the image
-        const options = {
-          maxSizeMB: 1, // Maximum size in MB
-          maxWidthOrHeight: 145, // Maximum width or height
-          useWebWorker: true, // Use multi-threading (web workers)
-        };
-
-        try {
-          const compressedFile = await imageCompression( imageFile, options );
-
-          // Convert compressed image to Base64
-          const reader = new FileReader();
-          reader.onload = ( e ) => {
-            console.log( e.target.result );
-            setMedia( prev => ( [ e.target.result, ...prev ] ) ); // Store the compressed image as a Base64 string
-          };
-          reader.readAsDataURL( compressedFile );
-        } catch ( error ) {
-          console.error( "Error compressing the image:", error );
-        }
-      }
-    }
-  };
 
 
   useEffect( () => {
@@ -87,8 +57,40 @@ const page = () => {
     // clearTimeout( timeout );
     // }, 000 );
 
+    const handlePaste = async ( e ) => {
+
+      const clipboardItems = e.clipboardData.items;
+
+      for ( let item of clipboardItems ) {
+        if ( item.type.startsWith( 'image/' ) ) {
+          const imageFile = item.getAsFile();
+
+          // Compress the image
+          const options = {
+            maxSizeMB: 1, // Maximum size in MB
+            maxWidthOrHeight: 145, // Maximum width or height
+            useWebWorker: true, // Use multi-threading (web workers)
+          };
+
+          try {
+            const compressedFile = await imageCompression( imageFile, options );
+
+            // Convert compressed image to Base64
+            const reader = new FileReader();
+            reader.onload = ( e ) => {
+              console.log( e.target.result );
+              setMedia( prev => ( [ e.target.result, ...prev ] ) ); // Store the compressed image as a Base64 string
+            };
+            reader.readAsDataURL( compressedFile );
+          } catch ( error ) {
+            console.error( "Error compressing the image:", error );
+          }
+        }
+      }
+    };
+
     document.addEventListener( "paste", handlePaste );
-    document.addEventListener( "keydown", handleInput );
+    // document.addEventListener( "keydown", handleInput );
 
 
 
@@ -109,7 +111,7 @@ const page = () => {
       socket.off( "typing" );
       socket.off( "stop typing" );
       document.removeEventListener( "paste", handlePaste );
-      document.removeEventListener( "keydown", handleInput );
+      // document.removeEventListener( "keydown", handleInput );
     };
   }, [] );
 
@@ -189,6 +191,7 @@ const page = () => {
             </div>
           ) }
           <input
+            onKeyDown={ handleInput }
             onChange={ handleTyping }
             value={ inputValue }
             type="text"
