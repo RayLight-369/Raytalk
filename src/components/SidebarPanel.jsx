@@ -49,7 +49,7 @@ export function SidebarPanel ( { children } ) {
             { open ? <Logo /> : <LogoIcon /> }
             <div className="mt-8 flex flex-col gap-2">
               { links.map( ( link, idx ) => (
-                <SidebarLink key={ idx } link={ link } activeLink={ "before:absolute before:w-[5px] before:h-[15px] before:bg-white before:-left-[2.5px] before:rounded-full before:z-[1000] before:top-1/2 before:-translate-y-1/2 " } />
+                <SidebarLink key={ idx } link={ link } activeLink={ "before:absolute before:w-[5px] before:h-[15px] before:bg-white before:-left-[2.5px] before:rounded-full before:z-[1000] before:top-1/2 before:-translate-y-1/2 " } onClick={ () => setOpen( false ) } />
               ) ) }
             </div>
           </div>
