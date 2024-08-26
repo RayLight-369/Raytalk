@@ -83,7 +83,7 @@ const page = () => {
 
 
       {/* <div className="chat-section relative w-full px-6"> */ }
-      <ScrollArea className={ cn( "chat-section relative w-full max-w-full flex-1 max-h-[calc(100%-24px)] pt-[2px] pb-1", CONFIG.displayMode == "casual" ? "px-5" : "" ) } divref={ msgRef }>
+      <ScrollArea className={ cn( "chat-section relative w-full max-w-full flex-1 max-h-full pt-[2px] pb-1", CONFIG.displayMode == "casual" ? "px-5" : "" ) } divref={ msgRef }>
         { msgs.map( ( msg, i ) => (
           // <div className={ cn( 'relative w-full h-full', msg.fromID == socket.id ? "float-right" : "" ) } key={ i }>
           <>
@@ -103,7 +103,7 @@ const page = () => {
       {/* </div> */ }
 
 
-      <div className='w-full py-2 mt-2 px-6 relative bottom-2 flex flex-col justify-center items-center'>
+      <div className='w-full h-[calc(75px)] py-2 mt-2 px-6 relative bottom-2 flex flex-col justify-end items-center'>
         <div id='typing' className={ cn( 'px-1 text-sm w-full transition-all translate-y-[30px] z-[8] outline-none bg-muted text-muted-foreground flex gap-2',
           typingUsers.length ? "translate-y-0" : ""
         ) }>
