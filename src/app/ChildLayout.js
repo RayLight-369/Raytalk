@@ -65,11 +65,11 @@ export default function ChildLayout () {
       }
 
       if ( visibility ) {
-        const timeout = setTimeout( () => {
-          setLastSeenMessageIndex( msgs.length - 1 );
-          setUnseenMessages( 0 );
-          clearTimeout( timeout );
-        }, 1200 );
+        // const timeout = setTimeout( () => {
+        setLastSeenMessageIndex( msgs.length - 1 );
+        setUnseenMessages( 0 );
+        // clearTimeout( timeout );
+        // }, 1200 );
       };
 
     }
