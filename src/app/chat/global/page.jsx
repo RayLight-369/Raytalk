@@ -83,7 +83,7 @@ const page = () => {
 
 
       {/* <div className="chat-section relative w-full px-6"> */ }
-      <ScrollArea className={ cn( "chat-section relative w-full max-w-full flex-1 max-h-full pt-[2px] pb-1", CONFIG.displayMode == "casual" ? "px-5" : "" ) } divref={ msgRef }>
+      <ScrollArea className={ cn( "chat-section relative w-full max-w-full flex-1 max-h-[calc(100%-24px)] pt-[2px] pb-1", CONFIG.displayMode == "casual" ? "px-5" : "" ) } divref={ msgRef }>
         { msgs.map( ( msg, i ) => (
           // <div className={ cn( 'relative w-full h-full', msg.fromID == socket.id ? "float-right" : "" ) } key={ i }>
           <>

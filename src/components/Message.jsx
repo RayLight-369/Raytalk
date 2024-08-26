@@ -6,7 +6,7 @@ const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
 
   if ( displayMode.toLowerCase() === "casual" )
     return (
-      <div className={ cn( 'flex relative gap-4 w-full max-w-[60%] py-4', msg.fromID == socket.id ? "flex-row-reverse float-right" : "", previousMsgFromSameUser ? "pt-0 pb-2" : "" ) }>
+      <div className={ cn( 'flex relative gap-4 w-full min-w-[60%] max-w-[75%] md:min-w-[auto] md:max-w-[60%] py-4', msg.fromID == socket.id ? "flex-row-reverse float-right" : "", previousMsgFromSameUser ? "pt-0 pb-2" : "" ) }>
         <AvatarContainer className={ previousMsgFromSameUser ? "invisible h-0" : "visible" } />
         <div className={ cn( 'flex flex-col gap-1', msg.fromID == socket.id ? "items-end" : "" ) }>
           { !previousMsgFromSameUser && <p className="name text-sm">{ msg.fromName }</p> }
