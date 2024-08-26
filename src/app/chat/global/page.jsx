@@ -12,7 +12,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import imageCompression from "browser-image-compression";
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 
 
 
@@ -29,6 +29,11 @@ const page = () => {
   const handlePaste = async ( e ) => {
 
     const items = e.type == "paste" ? e.clipboardData.items : e.target.files;
+
+    if ( e.type != "paste" && items.length > 9 - media.length ) {
+      alert( "You can send a total of 9 images." );
+      return;
+    }
 
     if ( media.length > 9 ) {
       alert( "vey bas kar de hon..." );
@@ -206,13 +211,12 @@ const page = () => {
             </div>
           ) }
           <div className='w-full flex gap-3'>
-            <Button className="text-sm" onClick={ () => {
-              const fileInput = document.querySelector( "input#media-input" );
-              fileInput.click();
-            } }>
+            {/* <Button className="text-sm"> */ }
+            <label htmlFor="media-input" className={ cn( buttonVariants( { variant: "default" } ), "cursor-pointer" ) }>
               <Link className='text-sm w-[20px] aspect-square' />
-            </Button>
-            <input type="file" name="media" id="media-input" className='hidden' multiple accept='image/*' max={ 9 - media.length } onChange={ handlePaste } />
+            </label>
+            {/* </Button> */ }
+            <input type="file" name="media-input" id="media-input" className='hidden' multiple accept='image/*' max={ 9 - media.length } onChange={ handlePaste } />
             <input
               onKeyDown={ handleInput }
               onChange={ handleTyping }
