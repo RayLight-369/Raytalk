@@ -100,9 +100,9 @@ const page = () => {
     }
   };
 
-  const scrollToBottom = () => {
+  const scrollToBottom = ( offset = 250 ) => {
 
-    const isNearBottom = msgRef.current.scrollHeight - msgRef.current.clientHeight - msgRef.current.scrollTop <= 250;
+    const isNearBottom = msgRef.current.scrollHeight - msgRef.current.clientHeight - msgRef.current.scrollTop <= offset;
 
     if ( isNearBottom ) {
       msgRef?.current?.scrollTo( 0, msgRef?.current?.scrollHeight );
@@ -160,7 +160,11 @@ const page = () => {
   }, [] );
 
   useEffect( () => {
-    scrollToBottom();
+    if ( msgs[ msgs.length - 1 ].media.length ) {
+      scrollToBottom( 400 );
+    } else {
+      scrollToBottom();
+    }
   }, [ msgs ] );
 
   return (
