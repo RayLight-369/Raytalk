@@ -126,8 +126,9 @@ const page = () => {
 
       if ( document.activeElement != input ) {
         input.focus();
-        handleInput( e );
       }
+
+      handleInput( e );
 
     };
 

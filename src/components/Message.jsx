@@ -74,7 +74,7 @@ const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
               <div className='flex flex-col gap-4 p-3 rounded-md'>
                 { msg.media.map( ( item, i ) => (
                   // <>
-                  <Image width={ 150 } height={ 150 } src={ item } key={ i } className='w-full h-auto max-h-[250px] rounded-md object-contain' />
+                  <Image width={ 150 } height={ 150 } src={ item } key={ i } className='w-full md:w-[60%] h-auto max-h-[250px] md:max-h-[300px] rounded-md object-contain' />
                   // </>
                 ) ) }
               </div>
