@@ -31,14 +31,14 @@ const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
     return (
       <div className={ cn( 'message flex relative gap-4 w-full min-w-[60%] max-w-[75%] md:min-w-[auto] md:max-w-[60%] py-4', msg.fromID == socket.id ? "flex-row-reverse float-right" : "", previousMsgFromSameUser ? "pt-0 pb-2" : "" ) }>
         <AvatarContainer className={ previousMsgFromSameUser ? "invisible h-0" : "visible" } />
-        <div className={ cn( 'flex flex-col gap-1', msg.fromID == socket.id ? "items-end" : "" ) }>
+        <div className={ cn( 'flex flex-col gap-1', msg.fromID == socket.id ? "items-end" : "items-start" ) }>
           { !previousMsgFromSameUser && (
-            <div className='flex gap-5 items-center'>
+            <div className={ cn( 'flex gap-5 items-center', socket.id != msg.fromID ? "flex-row-reverse" : "" ) }>
               <p className="date text-[0.62rem] text-muted-foreground">{ formatMessageDate( msg.date ) }</p>
               <p className="name text-sm">{ msg.fromName }</p>
             </div>
           ) }
-          <div className={ cn( 'flex flex-col gap-5 bg-muted rounded-md py-1 px-2', msg.fromID == socket.id ? "items-end" : "" ) }>
+          <div className={ cn( 'flex flex-col gap-5 bg-muted rounded-md py-1 px-2', msg.fromID == socket.id ? "items-end" : "items-start" ) }>
             { !!msg.media?.length && (
               <div className='flex flex-col gap-4 p-3'>
                 { msg.media.map( ( item, i ) => (
