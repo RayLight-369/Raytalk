@@ -183,7 +183,7 @@ const page = () => {
 
 
       <div className='w-full h-[75px] pt-1 pb-2 mt-2 px-6 relative bottom-2 flex flex-col justify-end items-center'>
-        <div id='typing' className={ cn( 'px-1 rounded-ss rounded-se text-sm w-full transition-all translate-y-[30px] z-[8] outline-none bg-muted text-muted-foreground flex gap-2',
+        <div id='typing' className={ cn( 'px-1 text-sm w-full transition-all translate-y-[30px] z-[8] outline-none text-muted-foreground flex gap-2',
           typingUsers.length ? "translate-y-0" : ""
         ) }>
           { typingUsers.length < 3 ? (

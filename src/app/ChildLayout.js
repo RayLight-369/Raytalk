@@ -10,6 +10,22 @@ const playSound = () => {
   const audio = new Audio( "/sound.mp3" );
   audio.play();
 };
+
+function showNotification ( title, options ) {
+  console.log( "Attempting to show notification:", title, options );
+
+  if ( Notification.permission === 'granted' ) {
+    new Notification( title, options );
+  } else {
+    console.log( 'Notification permission not granted.' );
+    Notification.requestPermission().then( permission => {
+      if ( permission === 'granted' ) {
+        new Notification( title, options );
+      }
+    } );
+  }
+}
+
 const updateFavicon = ( count ) => {
   const canvas = document.createElement( 'canvas' );
   canvas.width = 48;
@@ -57,11 +73,15 @@ export default function ChildLayout () {
 
   useEffect( () => {
     if ( msgs.length > 0 ) {
+      const msg = msgs[ msgs.length - 1 ];
       const newMessages = msgs.length - ( lastSeenMessageIndex + 1 );
 
       if ( ( !visibility || !pathName.includes( "global" ) ) && newMessages > 0 ) {
         playSound();
         setUnseenMessages( newMessages ); // Optionally update unseen messages count
+        showNotification( `**${ msgs[ msgs.length - 1 ]?.fromName || "New Message" }**`, {
+          body: `${ msg?.value || "Check Your Messages" }`
+        } );
       }
 
       if ( visibility ) {
