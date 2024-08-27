@@ -21,18 +21,16 @@ const Messages = ( { children } ) => {
 
     socket.connect();
 
-    socket.on( "msg", ( msg, fromID, fromName, media ) => {
-      setMsgs( prev => ( [ ...prev, { value: msg, fromID, fromName, media, type: "msg" } ] ) );
+    socket.on( "msg", ( msg, fromID, fromName, media, date ) => {
+      setMsgs( prev => ( [ ...prev, { value: msg, fromID, fromName, media, type: "msg", date } ] ) );
     } );
 
     socket.on( "note", ( id, name, type, totalUsers ) => {
 
       if ( type.includes( "join" ) ) {
-        if ( id == socket.id ) setTotalUsers( totalUsers );
-        else {
-          if ( name.trim().length ) {
-            setTotalUsers( prev => ( [ name, ...prev ] ) );
-          }
+        if ( id == socket.id && name.trim().length ) setTotalUsers( totalUsers );
+        else if ( name.trim().length ) {
+          setTotalUsers( prev => ( [ name, ...prev ] ) );
         }
       } else {
         setTotalUsers( prev => prev.filter( socketName => socketName != name ) );

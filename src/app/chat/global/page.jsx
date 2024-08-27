@@ -92,7 +92,7 @@ const page = () => {
   const handleInput = ( e ) => {
     if ( e.key == "Enter" && ( e.target.value.trim().length || media.length ) ) {
 
-      socket.emit( "msg", inputValue, socket.id, name, media );
+      socket.emit( "msg", inputValue, socket.id, name, media, new Date().toISOString() );
       socket.emit( "stop typing", name );
       setMedia( [] );
       setInput( "" );
