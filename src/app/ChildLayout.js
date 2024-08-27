@@ -11,21 +11,6 @@ const playSound = () => {
   audio.play();
 };
 
-function showNotification ( title, options ) {
-  console.log( "Attempting to show notification:", title, options );
-
-  if ( Notification.permission === 'granted' ) {
-    new Notification( title, options );
-  } else {
-    console.log( 'Notification permission not granted.' );
-    Notification.requestPermission().then( permission => {
-      if ( permission === 'granted' ) {
-        new Notification( title, options );
-      }
-    } );
-  }
-}
-
 const updateFavicon = ( count ) => {
   const canvas = document.createElement( 'canvas' );
   canvas.width = 48;
@@ -60,7 +45,7 @@ const updateFavicon = ( count ) => {
 
 export default function ChildLayout () {
 
-  const { msgs, unseenMessages, setUnseenMessages } = useMessages();
+  const { msgs, unseenMessages, setUnseenMessages, showNotification } = useMessages();
   const [ lastSeenMessageIndex, setLastSeenMessageIndex ] = useState( null );
   const pathName = usePathname();
   const visibility = usePageVisibility();
@@ -79,8 +64,9 @@ export default function ChildLayout () {
       if ( ( !visibility || !pathName.includes( "global" ) ) && newMessages > 0 ) {
         playSound();
         setUnseenMessages( newMessages ); // Optionally update unseen messages count
-        showNotification( `**${ msgs[ msgs.length - 1 ]?.fromName || "New Message" }**`, {
-          body: `${ msg?.value || "Check Your Messages" }`
+        showNotification( `${ msgs[ msgs.length - 1 ]?.fromName || "New Message" }`, {
+          body: `${ msg?.value || "Check Your Messages" }`,
+          icon: `${ document.querySelector( "link[rel*='icon']" )?.href || "/favicon.ico" }`
         } );
       }
 

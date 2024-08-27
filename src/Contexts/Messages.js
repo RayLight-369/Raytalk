@@ -17,6 +17,16 @@ const Messages = ( { children } ) => {
   const [ unseenMessages, setUnseenMessages ] = useState( 0 );
   const [ totalUsers, setTotalUsers ] = useState( [] );
 
+
+  function showNotification ( title, options ) {
+    console.log( "Attempting to show notification:", title, options );
+
+    if ( Notification.permission === 'granted' ) {
+      new Notification( title, options );
+    }
+  }
+
+
   useEffect( () => {
 
     function requestNotificationPermission () {
@@ -70,7 +80,7 @@ const Messages = ( { children } ) => {
   }, [] );
 
   return (
-    <MessagesContext.Provider value={ { msgs, setMsgs, name, setName, CONFIG, setCONFIG, unseenMessages, setUnseenMessages, isMobile, totalUsers, setTotalUsers } }>
+    <MessagesContext.Provider value={ { msgs, setMsgs, name, setName, CONFIG, setCONFIG, unseenMessages, setUnseenMessages, isMobile, totalUsers, setTotalUsers, showNotification } }>
       { children }
     </MessagesContext.Provider>
   );
