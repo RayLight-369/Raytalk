@@ -139,7 +139,11 @@ const page = () => {
 
     const isNearBottom = msgRef.current.scrollHeight - msgRef.current.clientHeight - msgRef.current.scrollTop <= 250;
 
-    if ( isNearBottom ) msgRef?.current?.scrollTo( 0, msgRef?.current?.scrollHeight );
+    if ( isNearBottom ) {
+      msgRef?.current?.scrollTo( 0, msgRef?.current?.scrollHeight );
+    } else {
+
+    }
 
   }, [ msgs ] );
 
@@ -165,7 +169,7 @@ const page = () => {
             { msg.type == "msg" ? (
               <Message msg={ msg } socket={ socket } displayMode={ CONFIG.displayMode } key={ i } previousMsgFromSameUser={ i > 0 && !!( msgs[ i - 1 ]?.fromID == msg.fromID ) } />
             ) : (
-              <div className={ 'flex relative gap-4 w-full max-w-[100%] py-4 border-t first:border-none' } key={ i }>
+              <div className={ 'message flex relative gap-4 w-full max-w-[100%] py-4 border-t first:border-none' } key={ i }>
                 <div className={ 'flex justify-center pt-1 w-full' }>
                   <p className="name text-sm text-center text-muted-foreground">{ msg.name } just { msg.type }</p>
                 </div>
@@ -179,7 +183,7 @@ const page = () => {
 
 
       <div className='w-full h-[75px] pt-1 pb-2 mt-2 px-6 relative bottom-2 flex flex-col justify-end items-center'>
-        <div id='typing' className={ cn( 'px-1 text-sm w-full transition-all translate-y-[30px] z-[8] outline-none bg-muted text-muted-foreground flex gap-2',
+        <div id='typing' className={ cn( 'px-1 rounded-ss rounded-se text-sm w-full transition-all translate-y-[30px] z-[8] outline-none bg-muted text-muted-foreground flex gap-2',
           typingUsers.length ? "translate-y-0" : ""
         ) }>
           { typingUsers.length < 3 ? (
@@ -210,7 +214,7 @@ const page = () => {
               </ScrollArea>
             </div>
           ) }
-          <div className='w-full flex gap-3'>
+          <div className='w-full flex gap-3 relative z-10'>
             {/* <Button className="text-sm"> */ }
             <label htmlFor="media-input" className={ cn( buttonVariants( { variant: "default" } ), "cursor-pointer" ) }>
               <Link className='text-sm w-[20px] aspect-square' />
