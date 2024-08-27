@@ -76,6 +76,7 @@ const page = () => {
   };
 
   const handleTyping = ( e ) => {
+
     setInput( e.target.value );
 
     socket.emit( "typing", name );
@@ -90,13 +91,25 @@ const page = () => {
   };
 
   const handleInput = ( e ) => {
-    if ( e.key == "Enter" && ( e.target.value.trim().length || media.length ) ) {
+    if ( e.key == "Enter" && ( ( e.target?.value?.trim()?.length || inputValue.trim().length ) || media.length ) ) {
 
       socket.emit( "msg", inputValue, socket.id, name, media, new Date().toISOString() );
       socket.emit( "stop typing", name );
       setMedia( [] );
       setInput( "" );
     }
+  };
+
+  const scrollToBottom = () => {
+
+    const isNearBottom = msgRef.current.scrollHeight - msgRef.current.clientHeight - msgRef.current.scrollTop <= 250;
+
+    if ( isNearBottom ) {
+      msgRef?.current?.scrollTo( 0, msgRef?.current?.scrollHeight );
+    } else {
+
+    }
+
   };
 
 
@@ -107,10 +120,20 @@ const page = () => {
     // clearTimeout( timeout );
     // }, 000 );
 
+    const handleGlobalTyping = e => {
+
+      const input = document.querySelector( "input#input" );
+
+      if ( document.activeElement != input ) {
+        input.focus();
+        handleInput( e );
+      }
+
+    };
 
 
     document.addEventListener( "paste", handlePaste );
-    // document.addEventListener( "keydown", handleInput );
+    document.addEventListener( "keydown", handleGlobalTyping );
 
 
 
@@ -131,20 +154,12 @@ const page = () => {
       socket.off( "typing" );
       socket.off( "stop typing" );
       document.removeEventListener( "paste", handlePaste );
-      // document.removeEventListener( "keydown", handleInput );
+      document.removeEventListener( "keydown", handleGlobalTyping );
     };
   }, [] );
 
   useEffect( () => {
-
-    const isNearBottom = msgRef.current.scrollHeight - msgRef.current.clientHeight - msgRef.current.scrollTop <= 250;
-
-    if ( isNearBottom ) {
-      msgRef?.current?.scrollTo( 0, msgRef?.current?.scrollHeight );
-    } else {
-
-    }
-
+    scrollToBottom();
   }, [ msgs ] );
 
   return (
@@ -227,6 +242,7 @@ const page = () => {
               value={ inputValue }
               type="text"
               placeholder='Type Message'
+              id='input'
               className='px-3 py-2 z-10 text-sm w-full rounded-md border outline-none bg-background text-foreground'
             />
           </div>
