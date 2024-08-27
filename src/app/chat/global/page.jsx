@@ -160,7 +160,7 @@ const page = () => {
   }, [] );
 
   useEffect( () => {
-    if ( msgs[ msgs.length - 1 ].media.length ) {
+    if ( msgs[ msgs.length - 1 ]?.media?.length ) {
       scrollToBottom( 400 );
     } else {
       scrollToBottom();
