@@ -43,7 +43,7 @@ const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
               <div className='flex flex-col gap-4 p-3'>
                 { msg.media.map( ( item, i ) => (
                   <>
-                    <Image width={ 300 } height={ 400 } src={ item } key={ i } className='rounded-md' />
+                    <Image width={ 300 } height={ 400 } src={ URL.createObjectURL( new Blob( [ item ], { type: item?.type } ) ) } key={ i } className='rounded-md' />
                   </>
                 ) ) }
               </div>
@@ -52,7 +52,7 @@ const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
               <div className='flex flex-col gap-4 p-3'>
                 { msg.audio.map( ( item, i ) => (
                   <>
-                    <audio controls src={ URL.createObjectURL( new Blob( [ item ], { type: 'audio/ogg' } ) ) } key={ i } />
+                    <audio controls src={ URL.createObjectURL( new Blob( [ item ], { type: item?.type } ) ) } key={ i } />
                   </>
                 ) ) }
               </div>
@@ -83,7 +83,7 @@ const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
               <div className='flex flex-col gap-4 p-3 rounded-md'>
                 { msg.media.map( ( item, i ) => (
                   // <>
-                  <Image width={ 150 } height={ 150 } src={ item } key={ i } className='w-full md:w-[60%] h-auto max-h-[250px] md:max-h-[300px] rounded-md object-contain' />
+                  <Image width={ 150 } height={ 150 } src={ URL.createObjectURL( new Blob( [ item ], { type: item?.type } ) ) } key={ i } className='w-full md:w-[60%] h-auto max-h-[250px] md:max-h-[300px] rounded-md object-contain' />
                   // </>
                 ) ) }
               </div>
@@ -92,7 +92,7 @@ const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
               <div className='flex flex-col gap-4 p-3 rounded-md'>
                 { msg.audio.map( ( item, i ) => (
                   // <>
-                  <audio controls src={ URL.createObjectURL( new Blob( [ item ], { type: 'audio/ogg' } ) ) } key={ i } />
+                  <audio controls src={ URL.createObjectURL( new Blob( [ item ], { type: item?.type } ) ) } key={ i } />
                   // </>
                 ) ) }
               </div>

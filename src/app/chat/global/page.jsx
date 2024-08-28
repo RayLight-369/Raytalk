@@ -39,12 +39,12 @@ const page = () => {
         mediaRecorderRef.current = new MediaRecorder( stream );
         mediaRecorderRef.current.ondataavailable = event => {
           if ( event.data && event.data.size > 0 ) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-              const arrayBuffer = reader.result;
-              setAudio( prev => ( [ ...prev, arrayBuffer ] ) );
-            };
-            reader.readAsArrayBuffer( event.data );
+            // const reader = new FileReader();
+            // reader.onloadend = () => {
+            // const arrayBuffer = reader.result;
+            setAudio( prev => ( [ ...prev, event.data ] ) );
+            // };
+            // reader.readAsArrayBuffer( event.data );
           }
         };
         mediaRecorderRef.current.start();
@@ -94,22 +94,21 @@ const page = () => {
 
         try {
           const compressedFile = await imageCompression( imageFile, options );
-
-          const reader = new FileReader();
-          reader.onload = ( e ) => {
-            console.log( e.target.result );
-            if ( media.length < 9 ) {
-              setMedia( prev => {
-                if ( prev.length < 9 ) {
-                  return [ e.target.result, ...prev ];
-                } else {
-                  alert( "vey bas kar de..." );
-                  return [ ...prev ];
-                }
-              } );
-            }
-          };
-          reader.readAsDataURL( compressedFile );
+          // const reader = new FileReader();
+          // reader.onload = ( e ) => {
+          //   console.log( e.target.result );
+          if ( media.length < 9 ) {
+            setMedia( prev => {
+              if ( prev.length < 9 ) {
+                return [ compressedFile, ...prev ];
+              } else {
+                alert( "vey bas kar de..." );
+                return [ ...prev ];
+              }
+            } );
+          }
+          // };
+          // reader.readAsDataURL( compressedFile );
         } catch ( error ) {
           console.error( "Error compressing the image:", error );
         }
@@ -265,7 +264,7 @@ const page = () => {
                 <div className='flex h-full gap-3 py-3 px-4 items-center'>
                   { media.map( ( img, i ) => (
                     <div id="img" className='w-36 h-full relative' key={ i }>
-                      <Image width={ 170 } height={ 145 } src={ img } className='w-full h-20 p-2 object-contain rounded-md bg-muted' />
+                      <Image width={ 170 } height={ 145 } src={ URL.createObjectURL( new Blob( [ img ], { type: img.type } ) ) } className='w-full h-20 p-2 object-contain rounded-md bg-muted' />
                       <X className='text-foreground rounded-md border p-1 absolute top-1 right-1 hover:bg-background' onClick={ () => {
                         setMedia( prev => prev.filter( ( _, j ) => i != j ) );
                       } } />
@@ -282,7 +281,7 @@ const page = () => {
                 <div className='flex h-full gap-3 py-3 px-4 items-center'>
                   { audio.map( ( item, i ) => (
                     <div id="audio" className='w-36 h-full relative' key={ i }>
-                      <audio controls src={ URL.createObjectURL( new Blob( [ item ], { type: "audio/ogg" } ) ) } className='w-[calc(100%-25px)]' />
+                      <audio controls src={ URL.createObjectURL( new Blob( [ item ], { type: item.type } ) ) } className='w-[calc(100%-25px)]' />
                       <X className='text-background bg-foreground rounded-full border p-1 absolute top-1 right-1 hover:scale-105' onClick={ () => {
                         setAudio( prev => prev.filter( ( _, j ) => i != j ) );
                       } } />
