@@ -3,6 +3,7 @@ import { AvatarContainer } from './AvatarContainer';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
+
 const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
 
   const formatMessageDate = ( timestamp ) => {
