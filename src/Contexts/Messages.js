@@ -48,8 +48,8 @@ const Messages = ( { children } ) => {
 
     socket.connect();
 
-    socket.on( "msg", ( msg, fromID, fromName, media, date ) => {
-      setMsgs( prev => ( [ ...prev, { value: msg, fromID, fromName, media, type: "msg", date } ] ) );
+    socket.on( "msg", ( msg, fromID, fromName, media, audio, date ) => {
+      setMsgs( prev => ( [ ...prev, { value: msg, fromID, fromName, media, audio, type: "msg", date } ] ) );
     } );
 
     socket.on( "note", ( id, name, type, totalUsers ) => {

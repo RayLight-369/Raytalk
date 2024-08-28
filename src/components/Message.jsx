@@ -48,6 +48,15 @@ const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
                 ) ) }
               </div>
             ) }
+            { !!msg.audio?.length && (
+              <div className='flex flex-col gap-4 p-3'>
+                { msg.audio.map( ( item, i ) => (
+                  <>
+                    <audio controls src={ URL.createObjectURL( new Blob( [ item ], { type: 'audio/ogg' } ) ) } key={ i } />
+                  </>
+                ) ) }
+              </div>
+            ) }
             <div className='relative flex items-start group max-w-full'>
               <p className="msg text-[0.8rem] leading-[1.24rem] break-all max-w-full">{ msg.value }</p>
               { previousMsgFromSameUser && (
@@ -74,7 +83,16 @@ const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
               <div className='flex flex-col gap-4 p-3 rounded-md'>
                 { msg.media.map( ( item, i ) => (
                   // <>
-                  <Image width={ 150 } height={ 150 } src={ item } key={ i } className='w-full md:w-[60%] h-auto max-h-[250px] md:max-h-[300px] rounded-md object-contain' />
+                  <audio controls src={ URL.createObjectURL( new Blob( [ item ], { type: 'audio/ogg' } ) ) } key={ i } />
+                  // </>
+                ) ) }
+              </div>
+            ) }
+            { !!msg.audio?.length && (
+              <div className='flex flex-col gap-4 p-3 rounded-md'>
+                { msg.audio.map( ( item, i ) => (
+                  // <>
+                  <audio src={ item } key={ i } className='w-full md:w-[60%] h-auto max-h-[250px] md:max-h-[300px] rounded-md object-contain' />
                   // </>
                 ) ) }
               </div>

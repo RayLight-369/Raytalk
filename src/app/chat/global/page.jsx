@@ -7,7 +7,7 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { useMessages } from '@/Contexts/Messages';
 import { cn } from '@/lib/utils';
 import { socket } from '@/socketio';
-import { EllipsisVertical, Link, X } from 'lucide-react';
+import { EllipsisVertical, Link, Mic, MicIcon, Square, X } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -25,6 +25,48 @@ const page = () => {
   const msgRef = useRef();
   const typingTimeoutRef = useRef( null );
   const [ media, setMedia ] = useState( [] );
+  const [ audio, setAudio ] = useState( [] );
+  const [ isRecording, setIsRecording ] = useState( false );
+  const [ audioBlob, setAudioBlob ] = useState( null );
+  const mediaRecorderRef = useRef( null );
+
+  const streamRef = useRef( null ); // Store the media stream
+
+  const startRecording = () => {
+    navigator.mediaDevices.getUserMedia( { audio: true } )
+      .then( stream => {
+        streamRef.current = stream; // Save the stream reference
+        mediaRecorderRef.current = new MediaRecorder( stream );
+        mediaRecorderRef.current.ondataavailable = event => {
+          if ( event.data && event.data.size > 0 ) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              const arrayBuffer = reader.result;
+              setAudio( prev => ( [ ...prev, arrayBuffer ] ) );
+            };
+            reader.readAsArrayBuffer( event.data );
+          }
+        };
+        mediaRecorderRef.current.start();
+        setIsRecording( true );
+      } )
+      .catch( error => {
+        console.error( 'Error accessing microphone:', error );
+      } );
+  };
+
+  const stopRecording = () => {
+    if ( mediaRecorderRef.current ) {
+      mediaRecorderRef.current.stop();
+      mediaRecorderRef.current.onstop = () => {
+        if ( streamRef.current ) {
+          streamRef.current.getTracks().forEach( track => track.stop() ); // Stop all tracks
+        }
+        setIsRecording( false );
+      };
+    }
+  };
+
 
   const handlePaste = async ( e ) => {
 
@@ -91,11 +133,11 @@ const page = () => {
   };
 
   const handleInput = ( e ) => {
-    if ( e.key == "Enter" && ( ( e.target?.value?.trim()?.length || inputValue.trim().length ) || media.length ) ) {
-
-      socket.emit( "msg", inputValue, socket.id, name, media, new Date().toISOString() );
+    if ( e.key == "Enter" && ( ( e.target?.value?.trim()?.length || inputValue.trim().length ) || media.length || audio.length ) ) {
+      socket.emit( "msg", inputValue, socket.id, name, media, audio, new Date().toISOString() );
       socket.emit( "stop typing", name );
       setMedia( [] );
+      setAudio( [] );
       setInput( "" );
     }
   };
@@ -234,8 +276,24 @@ const page = () => {
               </ScrollArea>
             </div>
           ) }
+          { !!audio.length && (
+            <div className='flex items-center gap-3 p-3 px-4 rounded-lg h-32 w-fit max-w-full'>
+              <ScrollArea className="w-full h-full whitespace-nowrap rounded-md [&>*>*]:h-full">
+                <div className='flex h-full gap-3 py-3 px-4 items-center'>
+                  { audio.map( ( item, i ) => (
+                    <div id="audio" className='w-36 h-full relative' key={ i }>
+                      <audio controls src={ URL.createObjectURL( new Blob( [ item ], { type: "audio/ogg" } ) ) } className='w-[calc(100%-25px)]' />
+                      <X className='text-background bg-foreground rounded-md border p-1 absolute top-1 right-1 hover:scale-105' onClick={ () => {
+                        setAudio( prev => prev.filter( ( _, j ) => i != j ) );
+                      } } />
+                    </div>
+                  ) ) }
+                </div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+            </div>
+          ) }
           <div className='w-full flex gap-3 relative z-10'>
-            {/* <Button onClick={ () => showNotification( "new Message", { body: "hahaha" } ) }>Show</Button> */ }
             <label htmlFor="media-input" className={ cn( buttonVariants( { variant: "default" } ), "cursor-pointer" ) }>
               <Link className='text-sm w-[20px] aspect-square' />
             </label>
@@ -249,6 +307,15 @@ const page = () => {
               id='input'
               className='px-3 py-2 z-10 text-sm w-full rounded-md border outline-none bg-background text-foreground'
             />
+            { isRecording ? (
+              <Button onClick={ stopRecording }>
+                <Square />
+              </Button>
+            ) : (
+              <Button onClick={ startRecording }>
+                <MicIcon />
+              </Button>
+            ) }
           </div>
         </div>
       </div>
