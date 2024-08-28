@@ -314,7 +314,7 @@ const page = () => {
             </div>
             { isRecording ? (
               <Button onClick={ stopRecording } className="p-0 h-full flex justify-center items-center w-auto aspect-square rounded-full bg-foreground text-background cursor-pointer">
-                <Square />
+                <Square className='fill-background' />
               </Button>
             ) : (
               <Button onClick={ startRecording } className="p-0 h-full flex justify-center items-center w-auto aspect-square rounded-full bg-foreground text-background cursor-pointer">
