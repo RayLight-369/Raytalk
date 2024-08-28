@@ -7,7 +7,7 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { useMessages } from '@/Contexts/Messages';
 import { cn } from '@/lib/utils';
 import { socket } from '@/socketio';
-import { EllipsisVertical, Link, Mic, MicIcon, Square, X } from 'lucide-react';
+import { EllipsisVertical, Link, Mic, MicIcon, Send, Square, X } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -298,15 +298,20 @@ const page = () => {
               <Link className='text-sm w-[20px] aspect-square' />
             </label>
             <input type="file" name="media-input" id="media-input" className='hidden' multiple accept='image/*' max={ 9 - media.length } onChange={ handlePaste } />
-            <input
-              onKeyDown={ handleInput }
-              onChange={ handleTyping }
-              value={ inputValue }
-              type="text"
-              placeholder='Type Message'
-              id='input'
-              className='px-3 py-2 z-10 text-sm w-full rounded-md border outline-none bg-background text-foreground'
-            />
+            <div className='relative w-full flex items-center'>
+              <input
+                onKeyDown={ handleInput }
+                onChange={ handleTyping }
+                value={ inputValue }
+                type="text"
+                placeholder='Type Message'
+                id='input'
+                className='px-3 py-[0.55rem] z-10 text-sm w-full rounded-md border outline-none bg-background text-foreground'
+              />
+              <Button variant="ghost" className="absolute right-0 z-20 text-sm" onClick={ () => handleInput( { key: "Enter" } ) }>
+                <Send className='h-[85%]' />
+              </Button>
+            </div>
             { isRecording ? (
               <Button onClick={ stopRecording }>
                 <Square />
