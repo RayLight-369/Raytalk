@@ -294,8 +294,8 @@ const page = () => {
             </div>
           ) }
           <div className='w-full flex gap-3 relative z-10'>
-            <label htmlFor="media-input" className={ cn( buttonVariants( { variant: "default" } ), "cursor-pointer" ) }>
-              <Link className='text-sm w-[20px] aspect-square' />
+            <label htmlFor="media-input" className={ "p-0 h-full flex items-center justify-center w-auto aspect-square rounded-full bg-foreground text-background cursor-pointer" }>
+              <Link className='text-sm w-[20px] aspect-square text-background' />
             </label>
             <input type="file" name="media-input" id="media-input" className='hidden' multiple accept='image/*' max={ 9 - media.length } onChange={ handlePaste } />
             <div className='relative w-full flex items-center'>
@@ -306,18 +306,18 @@ const page = () => {
                 type="text"
                 placeholder='Type Message'
                 id='input'
-                className='px-3 py-[0.55rem] z-10 text-sm w-full rounded-md border outline-none bg-background text-foreground'
+                className='px-3 py-[0.55rem] z-10 text-sm w-full rounded-ss-md rounded-es-md border outline-none bg-background text-foreground'
               />
-              <Button variant="ghost" className="absolute right-0 z-20 text-sm" onClick={ () => handleInput( { key: "Enter" } ) }>
+              <Button variant="outline" className="relative right-0 z-20 text-sm rounded-ss-none rounded-es-none" onClick={ () => handleInput( { key: "Enter" } ) }>
                 <Send className='h-[85%]' />
               </Button>
             </div>
             { isRecording ? (
-              <Button onClick={ stopRecording }>
+              <Button onClick={ stopRecording } className="p-0 h-full flex justify-center items-center w-auto aspect-square rounded-full bg-foreground text-background cursor-pointer">
                 <Square />
               </Button>
             ) : (
-              <Button onClick={ startRecording }>
+              <Button onClick={ startRecording } className="p-0 h-full flex justify-center items-center w-auto aspect-square rounded-full bg-foreground text-background cursor-pointer">
                 <MicIcon />
               </Button>
             ) }
