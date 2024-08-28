@@ -283,7 +283,7 @@ const page = () => {
                   { audio.map( ( item, i ) => (
                     <div id="audio" className='w-36 h-full relative' key={ i }>
                       <audio controls src={ URL.createObjectURL( new Blob( [ item ], { type: "audio/ogg" } ) ) } className='w-[calc(100%-25px)]' />
-                      <X className='text-background bg-foreground rounded-md border p-1 absolute top-1 right-1 hover:scale-105' onClick={ () => {
+                      <X className='text-background bg-foreground rounded-full border p-1 absolute top-1 right-1 hover:scale-105' onClick={ () => {
                         setAudio( prev => prev.filter( ( _, j ) => i != j ) );
                       } } />
                     </div>
