@@ -52,11 +52,12 @@ const Messages = ( { children } ) => {
       setMsgs( prev => ( [ ...prev, { value: msg, fromID, fromName, media, audio, type: "msg", date } ] ) );
     } );
 
-    socket.on( "note", ( id, name, type, totalUsers ) => {
+    socket.on( "totalUsers", setTotalUsers );
+
+    socket.on( "note", ( id, name, type ) => {
 
       if ( type.includes( "join" ) ) {
-        if ( id == socket.id && name.trim().length ) setTotalUsers( totalUsers );
-        else if ( name.trim().length ) {
+        if ( name.trim().length && id != socket.id ) {
           setTotalUsers( prev => ( [ name, ...prev ] ) );
         }
       } else {

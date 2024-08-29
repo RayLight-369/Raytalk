@@ -39,7 +39,10 @@ export function PopUp ( { setName } ) {
             <input
               id="name"
               required
-              onChange={ e => SetName( e.target.value ) }
+              onChange={ e => {
+                SetName( e.target.value );
+                // setName( e.target.value );
+              } }
               value={ name }
               className="col-span-3 border bg-background text-foreground rounded-md px-3 py-2 text-sm flex-1"
             />
@@ -47,7 +50,7 @@ export function PopUp ( { setName } ) {
               <DialogClose asChild>
                 <Button type="button" onClick={ () => {
                   if ( name.trim().length ) {
-                    socket.emit( "joined", socket.id, name );
+                    socket.emit( "joined", name );
 
                     setName( name );
                     setState( false );
