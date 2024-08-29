@@ -58,10 +58,10 @@ const Messages = ( { children } ) => {
 
       if ( type.includes( "join" ) ) {
         if ( name.trim().length && id != socket.id ) {
-          setTotalUsers( prev => ( [ name, ...prev ] ) );
+          setTotalUsers( prev => ( [ { name, id }, ...prev ] ) );
         }
       } else {
-        setTotalUsers( prev => prev.filter( socketName => socketName != name ) );
+        setTotalUsers( prev => prev.filter( socket => socket.id != id ) );
       }
 
       setMsgs( prev => ( [ ...prev, { id, name, type } ] ) );
