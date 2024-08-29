@@ -52,6 +52,12 @@ export function PopUp ( { setName } ) {
                   if ( name.trim().length ) {
                     socket.emit( "joined", name );
 
+                    if ( localStorage.getItem( "joined" ) ) {
+                      alert( "Please switch to the tab where you are already chatting. :)" );
+                      window.close();
+                      return;
+                    }
+
                     setName( name );
                     setState( false );
                     router.push( "/chat/global" );
