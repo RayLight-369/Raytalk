@@ -87,8 +87,8 @@ const page = () => {
         const imageFile = e.type == "paste" ? item.getAsFile() : item;
 
         const options = {
-          maxSizeMB: 1,
-          maxWidthOrHeight: 1248,
+          maxSizeMB: 0.5,
+          maxWidthOrHeight: 1024,
           useWebWorker: true,
         };
 
