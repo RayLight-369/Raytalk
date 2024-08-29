@@ -64,13 +64,13 @@ export function PopUp ( { setName } ) {
               <DialogClose asChild>
                 <Button type="button" onClick={ () => {
 
-                  // socket.on( "connect_error", err => {
-                  //   console.log( err.message );
-                  //   alert( err.message );
-                  //   SetName( "" );
-                  //   setName( "" );
-                  //   return;
-                  // } );
+                  socket.on( "connect_error", err => {
+                    console.log( err.message );
+                    alert( err.message );
+                    SetName( "" );
+                    setName( "" );
+                    return;
+                  } );
 
                   if ( name.trim().length ) {
 
