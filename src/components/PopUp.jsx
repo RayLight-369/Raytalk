@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { socket } from "@/socketio";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 export function PopUp ( { setName } ) {
@@ -21,6 +21,20 @@ export function PopUp ( { setName } ) {
   const [ state, setState ] = useState( true );
   const [ name, SetName ] = useState( "" );
   const router = useRouter();
+
+  useEffect( () => {
+    socket.on( "connect_error", ( err ) => {
+      console.log( err.message );
+      alert( err.message );
+      SetName( "" );
+      setName( "" );
+      return;
+    } );
+
+    return () => {
+      socket.off( "connect_error" );
+    };
+  }, [] );
 
   return (
     <Dialog open={ state }>
@@ -50,13 +64,13 @@ export function PopUp ( { setName } ) {
               <DialogClose asChild>
                 <Button type="button" onClick={ () => {
 
-                  socket.on( "connect_error", err => {
-                    console.log( err.message );
-                    alert( err.message );
-                    SetName( "" );
-                    setName( "" );
-                    return;
-                  } );
+                  // socket.on( "connect_error", err => {
+                  //   console.log( err.message );
+                  //   alert( err.message );
+                  //   SetName( "" );
+                  //   setName( "" );
+                  //   return;
+                  // } );
 
                   if ( name.trim().length ) {
 
