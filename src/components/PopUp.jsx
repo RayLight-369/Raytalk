@@ -49,15 +49,16 @@ export function PopUp ( { setName } ) {
             <DialogFooter>
               <DialogClose asChild>
                 <Button type="button" onClick={ () => {
+                  if ( localStorage.getItem( "joined" ) ) {
+                    alert( "Please switch to the tab where you are already chatting. :)" );
+                    window.close();
+                    return;
+                  }
+
                   if ( name.trim().length ) {
+
                     socket.emit( "joined", name );
-
-                    if ( localStorage.getItem( "joined" ) ) {
-                      alert( "Please switch to the tab where you are already chatting. :)" );
-                      window.close();
-                      return;
-                    }
-
+                    localStorage.setItem( "joined", name || true );
                     setName( name );
                     setState( false );
                     router.push( "/chat/global" );
