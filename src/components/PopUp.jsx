@@ -51,7 +51,6 @@ export function PopUp ( { setName } ) {
                 <Button type="button" onClick={ () => {
                   if ( localStorage.getItem( "joined" ) ) {
                     alert( "Please switch to the tab where you are already chatting. :)" );
-                    window.close();
                     return;
                   }
 
