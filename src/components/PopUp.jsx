@@ -49,18 +49,22 @@ export function PopUp ( { setName } ) {
             <DialogFooter>
               <DialogClose asChild>
                 <Button type="button" onClick={ () => {
-                  if ( localStorage.getItem( "joined" ) ) {
-                    alert( "Please switch to the tab where you are already chatting. :)" );
+
+                  socket.on( "connect_error", err => {
+                    console.log( err.message );
+                    alert( err.message );
+                    SetName( "" );
+                    setName( "" );
                     return;
-                  }
+                  } );
 
                   if ( name.trim().length ) {
 
                     socket.emit( "joined", name );
-                    localStorage.setItem( "joined", name || true );
                     setName( name );
                     setState( false );
                     router.push( "/chat/global" );
+
                   } else {
                     alert( "Annay koi naam daal apna, school mein kabhi khaali jaga pur ni ki kya..." );
                   }

@@ -176,8 +176,8 @@ const page = () => {
 
     document.addEventListener( "paste", handlePaste );
     document.addEventListener( "keydown", handleGlobalTyping );
-    window.addEventListener( "unload", () => localStorage.removeItem( "joined" ) );
-    window.addEventListener( "beforeunload", () => localStorage.removeItem( "joined" ) );
+    // window.addEventListener( "unload", () => localStorage.removeItem( "joined" ) );
+    // window.addEventListener( "beforeunload", () => localStorage.removeItem( "joined" ) );
 
 
 
