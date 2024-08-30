@@ -305,7 +305,7 @@ const page = () => {
         <div className='flex flex-col gap-3 w-full'>
 
           <MediaPreview media_={ media } setMedia={ setMedia } />
-          <AudioPreview audio_={ audio } />
+          <AudioPreview audio_={ audio } setAudio={ setAudio } />
 
           <div className='w-full flex gap-3 relative z-10'>
             <label htmlFor="media-input" className={ "p-0 h-full flex items-center justify-center w-auto aspect-square rounded-full bg-foreground text-background cursor-pointer" }>
