@@ -10,11 +10,54 @@ import { socket } from '@/socketio';
 import { EllipsisVertical, Link, Mic, MicIcon, Send, Square, X } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import imageCompression from "browser-image-compression";
 import { Button, buttonVariants } from '@/components/ui/button';
 
 
+const AudioPreview = memo( ( { audio_, setAudio } ) => (
+  <>
+    { !!audio_.length && (
+      <div className='flex items-center gap-3 p-3 px-4 rounded-lg h-32 w-fit max-w-full'>
+        <ScrollArea className="w-full h-full whitespace-nowrap rounded-md [&>*>*]:h-full">
+          <div className='flex h-full gap-3 py-3 px-4 items-center'>
+            { audio_.map( ( item, i ) => (
+              <div id="audio" className='w-36 h-full relative' key={ i }>
+                <audio controls src={ URL.createObjectURL( new Blob( [ item ], { type: item.type } ) ) } className='w-[calc(100%-25px)]' />
+                <X className='text-background bg-foreground rounded-full border p-1 absolute top-1 right-1 hover:scale-105' onClick={ () => {
+                  setAudio( prev => prev.filter( ( _, j ) => i != j ) );
+                } } />
+              </div>
+            ) ) }
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+      </div>
+    ) }
+  </>
+) );
+
+const MediaPreview = memo( ( { media_, setMedia } ) => (
+  <>
+    { !!media_.length && (
+      <div className='flex items-center gap-3 p-3 px-4 rounded-lg h-32 w-fit max-w-full'>
+        <ScrollArea className="w-full h-full whitespace-nowrap rounded-md [&>*>*]:h-full">
+          <div className='flex h-full gap-3 py-3 px-4 items-center'>
+            { media_.map( ( img, i ) => (
+              <div id="img" className='w-36 h-full relative' key={ i }>
+                <Image width={ 170 } height={ 145 } src={ URL.createObjectURL( new Blob( [ img ], { type: img.type } ) ) } className='w-full h-20 p-2 object-contain rounded-md bg-muted' />
+                <X className='text-foreground rounded-md border p-1 absolute top-1 right-1 hover:bg-background' onClick={ () => {
+                  setMedia( prev => prev.filter( ( _, j ) => i != j ) );
+                } } />
+              </div>
+            ) ) }
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+      </div>
+    ) }
+  </>
+) );
 
 const page = () => {
 
@@ -260,40 +303,10 @@ const page = () => {
           ) }
         </div>
         <div className='flex flex-col gap-3 w-full'>
-          { !!media.length && (
-            <div className='flex items-center gap-3 p-3 px-4 rounded-lg h-32 w-fit max-w-full'>
-              <ScrollArea className="w-full h-full whitespace-nowrap rounded-md [&>*>*]:h-full">
-                <div className='flex h-full gap-3 py-3 px-4 items-center'>
-                  { media.map( ( img, i ) => (
-                    <div id="img" className='w-36 h-full relative' key={ i }>
-                      <Image width={ 170 } height={ 145 } src={ URL.createObjectURL( new Blob( [ img ], { type: img.type } ) ) } className='w-full h-20 p-2 object-contain rounded-md bg-muted' />
-                      <X className='text-foreground rounded-md border p-1 absolute top-1 right-1 hover:bg-background' onClick={ () => {
-                        setMedia( prev => prev.filter( ( _, j ) => i != j ) );
-                      } } />
-                    </div>
-                  ) ) }
-                </div>
-                <ScrollBar orientation="horizontal" />
-              </ScrollArea>
-            </div>
-          ) }
-          { !!audio.length && (
-            <div className='flex items-center gap-3 p-3 px-4 rounded-lg h-32 w-fit max-w-full'>
-              <ScrollArea className="w-full h-full whitespace-nowrap rounded-md [&>*>*]:h-full">
-                <div className='flex h-full gap-3 py-3 px-4 items-center'>
-                  { audio.map( ( item, i ) => (
-                    <div id="audio" className='w-36 h-full relative' key={ i }>
-                      <audio controls src={ URL.createObjectURL( new Blob( [ item ], { type: item.type } ) ) } className='w-[calc(100%-25px)]' />
-                      <X className='text-background bg-foreground rounded-full border p-1 absolute top-1 right-1 hover:scale-105' onClick={ () => {
-                        setAudio( prev => prev.filter( ( _, j ) => i != j ) );
-                      } } />
-                    </div>
-                  ) ) }
-                </div>
-                <ScrollBar orientation="horizontal" />
-              </ScrollArea>
-            </div>
-          ) }
+
+
+          <AudioPreview audio_={ audio } />
+
           <div className='w-full flex gap-3 relative z-10'>
             <label htmlFor="media-input" className={ "p-0 h-full flex items-center justify-center w-auto aspect-square rounded-full bg-foreground text-background cursor-pointer" }>
               <Link className='text-sm w-[20px] aspect-square text-background' />
