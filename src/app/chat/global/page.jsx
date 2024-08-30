@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import imageCompression from "browser-image-compression";
 import { Button, buttonVariants } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 
 const AudioPreview = memo( ( { audio_, setAudio } ) => (
@@ -37,27 +38,38 @@ const AudioPreview = memo( ( { audio_, setAudio } ) => (
   </>
 ) );
 
-const MediaPreview = memo( ( { media_, setMedia } ) => (
-  <>
-    { !!media_.length && (
-      <div className='flex items-center gap-3 p-1 rounded-lg h-32 w-fit max-w-full'>
-        <ScrollArea className="w-full h-full whitespace-nowrap rounded-md [&>*>*]:h-full">
-          <div className='flex h-full gap-3 py-3 px-4 items-center'>
-            { media_.map( ( img, i ) => (
-              <div id="img" className='w-36 h-full relative' key={ i }>
-                <Image width={ 170 } height={ 145 } src={ URL.createObjectURL( new Blob( [ img ], { type: img.type } ) ) } className='w-full h-20 p-2 object-contain rounded-md bg-muted' />
-                <X className='text-foreground rounded-md border p-1 absolute top-1 right-1 hover:bg-background' onClick={ () => {
-                  setMedia( prev => prev.filter( ( _, j ) => i != j ) );
-                } } />
-              </div>
-            ) ) }
-          </div>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
-      </div>
-    ) }
-  </>
-) );
+const MediaPreview = memo( ( { media_, setMedia } ) => {
+
+  return (
+    <>
+      { !!media_.length && (
+        <div className='flex items-center gap-3 p-1 rounded-lg h-32 w-fit max-w-full'>
+          <ScrollArea className="w-full h-full whitespace-nowrap rounded-md [&>*>*]:h-full">
+            <div className='flex h-full gap-3 py-3 px-4 items-center'>
+              { media_.map( ( img, i ) => (
+                <div id="img" className='w-36 h-full relative' key={ i }>
+                  {/* <Image width={ 170 } height={ 145 } src={ URL.createObjectURL( new Blob( [ img ], { type: img.type } ) ) } className='w-full h-20 p-2 object-contain rounded-md bg-muted' /> */ }
+                  <Dialog key={ i }>
+                    <DialogTrigger asChild>
+                      <Image width={ 300 } height={ 300 } src={ URL.createObjectURL( new Blob( [ img ], { type: img?.type } ) ) } className="w-full h-20 object-contain cursor-pointer bg-muted rounded-md" />
+                    </DialogTrigger>
+                    <DialogContent>
+                      <img src={ URL.createObjectURL( new Blob( [ img ], { type: img?.type } ) ) } className="w-full h-full object-cover" />
+                    </DialogContent>
+                  </Dialog>
+                  <X className='text-foreground rounded-md border p-1 absolute top-1 right-1 hover:bg-background' onClick={ () => {
+                    setMedia( prev => prev.filter( ( _, j ) => i != j ) );
+                  } } />
+                </div>
+              ) ) }
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+        </div>
+      ) }
+    </>
+  );
+} );
 
 const page = () => {
 
