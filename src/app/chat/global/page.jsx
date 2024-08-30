@@ -18,7 +18,7 @@ import { Button, buttonVariants } from '@/components/ui/button';
 const AudioPreview = memo( ( { audio_, setAudio } ) => (
   <>
     { !!audio_.length && (
-      <div className='flex items-center gap-3 p-3 px-4 rounded-lg h-32 w-fit max-w-full'>
+      <div className='flex items-center gap-3 p-1 rounded-lg h-32 w-fit max-w-full'>
         <ScrollArea className="w-full h-full whitespace-nowrap rounded-md [&>*>*]:h-full">
           <div className='flex h-full gap-3 py-3 px-4 items-center'>
             { audio_.map( ( item, i ) => (
@@ -40,7 +40,7 @@ const AudioPreview = memo( ( { audio_, setAudio } ) => (
 const MediaPreview = memo( ( { media_, setMedia } ) => (
   <>
     { !!media_.length && (
-      <div className='flex items-center gap-3 p-3 px-4 rounded-lg h-32 w-fit max-w-full'>
+      <div className='flex items-center gap-3 p-1 rounded-lg h-32 w-fit max-w-full'>
         <ScrollArea className="w-full h-full whitespace-nowrap rounded-md [&>*>*]:h-full">
           <div className='flex h-full gap-3 py-3 px-4 items-center'>
             { media_.map( ( img, i ) => (
@@ -214,6 +214,11 @@ const page = () => {
 
       handleInput( e );
 
+      if ( e.key == "Escape" ) {
+        setAudio( [] );
+        setMedia( [] );
+      }
+
     };
 
 
@@ -302,7 +307,7 @@ const page = () => {
             <p className='text-[0.785rem]'>A lot of people are tying...</p>
           ) }
         </div>
-        <div className='flex flex-col gap-3 w-full'>
+        <div className={ cn( 'flex flex-col gap-3 w-full bg-background p-2 rounded-md', media.length || audio.length ? "border" : "border-none" ) }>
 
           <MediaPreview media_={ media } setMedia={ setMedia } />
           <AudioPreview audio_={ audio } setAudio={ setAudio } />
