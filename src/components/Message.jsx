@@ -1,10 +1,15 @@
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { AvatarContainer } from "./AvatarContainer";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTrigger } from "./ui/dialog";
 
 const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
+
+  const src = useCallback( ( item ) => URL.createObjectURL(
+    new Blob( [ item ], { type: item?.type } )
+  ), [] );
+
   const formatMessageDate = ( timestamp ) => {
     const now = new Date();
     const messageDate = new Date( timestamp );
@@ -80,14 +85,10 @@ const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
                     /> */}
                     <Dialog key={ i }>
                       <DialogTrigger asChild>
-                        <Image width={ 300 } height={ 300 } src={ URL.createObjectURL(
-                          new Blob( [ item ], { type: item?.type } )
-                        ) } className="object-cover cursor-pointer rounded-md" />
+                        <Image width={ 300 } height={ 300 } src={ src( item ) } className="object-cover cursor-pointer rounded-md" />
                       </DialogTrigger>
                       <DialogContent>
-                        <img src={ URL.createObjectURL(
-                          new Blob( [ item ], { type: item?.type } )
-                        ) } className="w-full h-full object-cover" />
+                        <img src={ src( item ) } className="w-full h-full object-cover" />
                       </DialogContent>
                     </Dialog>
                   </>
@@ -159,14 +160,13 @@ const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
                   // />
                   <Dialog key={ i }>
                     <DialogTrigger asChild>
-                      <Image width={ 300 } height={ 300 } src={ URL.createObjectURL(
-                        new Blob( [ item ], { type: item?.type } )
-                      ) } className="w-full md:w-[60%] h-auto max-h-[250px] md:max-h-[300px] object-contain cursor-pointer rounded-md" />
+                      <Image width={ 300 } height={ 300 } src={ src( item ) } className="w-full md:w-[60%] h-auto max-h-[250px] md:max-h-[300px] object-contain cursor-pointer rounded-md" />
                     </DialogTrigger>
                     <DialogContent>
-                      <img src={ URL.createObjectURL(
-                        new Blob( [ item ], { type: item?.type } )
-                      ) } className="w-full h-full object-cover" />
+                      <img src={ src( item ) } className="w-full h-full object-cover" />
+                      {/* <DialogDescription>
+                        <a href={ src( item ) } target="_blank" rel="noopener noreferrer" className="text-[0.8rem] text-muted-foreground">Open in another tab.</a>
+                      </DialogDescription> */}
                     </DialogContent>
                   </Dialog>
                   // </>
