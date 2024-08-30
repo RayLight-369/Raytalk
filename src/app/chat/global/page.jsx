@@ -304,7 +304,7 @@ const page = () => {
         </div>
         <div className='flex flex-col gap-3 w-full'>
 
-
+          <MediaPreview media_={ media } setMedia={ setMedia } />
           <AudioPreview audio_={ audio } />
 
           <div className='w-full flex gap-3 relative z-10'>

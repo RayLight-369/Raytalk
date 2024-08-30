@@ -2,6 +2,7 @@ import { memo } from "react";
 import { AvatarContainer } from "./AvatarContainer";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 
 const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
   const formatMessageDate = ( timestamp ) => {
@@ -68,7 +69,7 @@ const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
               <div className="flex flex-col gap-4 p-3">
                 { msg.media.map( ( item, i ) => (
                   <>
-                    <Image
+                    {/* <Image
                       width={ 300 }
                       height={ 400 }
                       src={ URL.createObjectURL(
@@ -76,7 +77,19 @@ const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
                       ) }
                       key={ i }
                       className="rounded-md"
-                    />
+                    /> */}
+                    <Dialog key={ i }>
+                      <DialogTrigger asChild>
+                        <Image width={ 300 } height={ 300 } src={ URL.createObjectURL(
+                          new Blob( [ item ], { type: item?.type } )
+                        ) } className="object-cover cursor-pointer rounded-md" />
+                      </DialogTrigger>
+                      <DialogContent>
+                        <img src={ URL.createObjectURL(
+                          new Blob( [ item ], { type: item?.type } )
+                        ) } className="w-full h-full object-cover" />
+                      </DialogContent>
+                    </Dialog>
                   </>
                 ) ) }
               </div>
@@ -135,15 +148,27 @@ const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
               <div className="flex flex-col gap-4 p-3 rounded-md">
                 { msg.media.map( ( item, i ) => (
                   // <>
-                  <Image
-                    width={ 150 }
-                    height={ 150 }
-                    src={ URL.createObjectURL(
-                      new Blob( [ item ], { type: item?.type } )
-                    ) }
-                    key={ i }
-                    className="w-full md:w-[60%] h-auto max-h-[250px] md:max-h-[300px] rounded-md object-contain"
-                  />
+                  // <Image
+                  //   width={ 150 }
+                  //   height={ 150 }
+                  //   src={ URL.createObjectURL(
+                  //     new Blob( [ item ], { type: item?.type } )
+                  //   ) }
+                  //   key={ i }
+                  //   className="w-full md:w-[60%] h-auto max-h-[250px] md:max-h-[300px] rounded-md object-contain"
+                  // />
+                  <Dialog key={ i }>
+                    <DialogTrigger asChild>
+                      <Image width={ 300 } height={ 300 } src={ URL.createObjectURL(
+                        new Blob( [ item ], { type: item?.type } )
+                      ) } className="w-full md:w-[60%] h-auto max-h-[250px] md:max-h-[300px] object-contain cursor-pointer rounded-md" />
+                    </DialogTrigger>
+                    <DialogContent>
+                      <img src={ URL.createObjectURL(
+                        new Blob( [ item ], { type: item?.type } )
+                      ) } className="w-full h-full object-cover" />
+                    </DialogContent>
+                  </Dialog>
                   // </>
                 ) ) }
               </div>
