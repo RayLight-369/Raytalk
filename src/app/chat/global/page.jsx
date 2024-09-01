@@ -53,10 +53,10 @@ const MediaPreview = memo( ( { media_, setMedia } ) => {
                   {/* <Image width={ 170 } height={ 145 } src={ URL.createObjectURL( new Blob( [ img ], { type: img.type } ) ) } className='w-full h-20 p-2 object-contain rounded-md bg-muted' /> */ }
                   <Dialog key={ i }>
                     <DialogTrigger asChild>
-                      <Image width={ 300 } height={ 300 } src={ src } className="w-full h-20 object-contain cursor-pointer bg-muted rounded-md" />
+                      <Image width={ 300 } height={ 300 } src={ src( img ) } className="w-full h-20 object-contain cursor-pointer bg-muted rounded-md" />
                     </DialogTrigger>
                     <DialogContent>
-                      <img src={ URL.createObjectURL( src ) } className="w-full h-full object-cover" />
+                      <img src={ URL.createObjectURL( src( img ) ) } className="w-full h-full object-cover" />
                     </DialogContent>
                   </Dialog>
                   <X className='text-foreground rounded-md border p-1 absolute top-1 right-1 hover:bg-background' onClick={ () => {
