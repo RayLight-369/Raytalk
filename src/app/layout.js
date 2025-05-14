@@ -4,6 +4,7 @@ import ChildLayout from "./ChildLayout";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { SidebarPanel } from "@/components/SidebarPanel";
 import Messages from "@/Contexts/Messages";
+import { CallProvider } from "@/Contexts/CallContext";
 
 const inter = Inter( { subsets: [ "latin" ] } );
 
@@ -12,7 +13,7 @@ export const metadata = {
   description: "Global Chat App, No need for linking accounts!",
 };
 
-export default function RootLayout ( { children } ) {
+export default function RootLayout( { children } ) {
   return (
     <html lang="en">
       <body className={ inter.className + " w-screen h-screen" }>
@@ -22,10 +23,12 @@ export default function RootLayout ( { children } ) {
           enableSystem
         >
           <Messages>
-            <ChildLayout />
-            <SidebarPanel>
-              { children }
-            </SidebarPanel>
+            <CallProvider>
+              <ChildLayout />
+              <SidebarPanel>
+                { children }
+              </SidebarPanel>
+            </CallProvider>
           </Messages>
         </ThemeProvider>
       </body>

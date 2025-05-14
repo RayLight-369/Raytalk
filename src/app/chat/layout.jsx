@@ -2,18 +2,22 @@
 
 import { AvatarContainer } from '@/components/AvatarContainer';
 import { ResizableSidebar } from '@/components/ResizeableSidebar';
+import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useCall } from '@/Contexts/CallContext';
 import { useMessages } from '@/Contexts/Messages';
 import { cn } from '@/lib/utils';
-import { ChevronRight, EllipsisVertical } from 'lucide-react';
+import { ChevronRight, EllipsisVertical, Phone, PhoneOff } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
 
 
 const AccountsSection = () => {
 
   const pathName = usePathname();
   const { name, unseenMessages } = useMessages();
+  const { startCall, leaveCall, localStream, remoteStreams } = useCall();
 
   return (
     <div className='w-full h-full'>
@@ -34,6 +38,17 @@ const AccountsSection = () => {
                 </span> }
               <ChevronRight className='absolute right-6 translate-x-[30px] invisible p-[2px] opacity-0 transition-all group-hover:visible group-hover:translate-x-0 group-hover:opacity-100' />
             </Link>
+            <Button onClick={ startCall } disabled={ !!localStream }>
+              <Phone className="mr-2" /> Join Call
+            </Button>
+
+            <Button onClick={ leaveCall } disabled={ !localStream }>
+              <PhoneOff className="mr-2" /> Leave Call
+            </Button>
+            { Object.entries( remoteStreams ).map( ( [ id, stream ] ) => (
+              <audio key={ id } srcObject={ stream } autoPlay />
+            ) ) }
+
           </ScrollArea>
         ) }
       </div>
