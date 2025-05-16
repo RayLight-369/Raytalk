@@ -4,7 +4,6 @@ import ChildLayout from "./ChildLayout";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { SidebarPanel } from "@/components/SidebarPanel";
 import Messages from "@/Contexts/Messages";
-import { CallProvider } from "@/Contexts/CallContext";
 
 const inter = Inter( { subsets: [ "latin" ] } );
 
@@ -23,12 +22,10 @@ export default function RootLayout( { children } ) {
           enableSystem
         >
           <Messages>
-            <CallProvider>
-              <ChildLayout />
-              <SidebarPanel>
-                { children }
-              </SidebarPanel>
-            </CallProvider>
+            <ChildLayout />
+            <SidebarPanel>
+              { children }
+            </SidebarPanel>
           </Messages>
         </ThemeProvider>
       </body>

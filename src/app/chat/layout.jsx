@@ -4,7 +4,6 @@ import { AvatarContainer } from '@/components/AvatarContainer';
 import { ResizableSidebar } from '@/components/ResizeableSidebar';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useCall } from '@/Contexts/CallContext';
 import { useMessages } from '@/Contexts/Messages';
 import { cn } from '@/lib/utils';
 import { ChevronRight, EllipsisVertical, Phone, PhoneOff } from 'lucide-react';
@@ -12,12 +11,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 
-
 const AccountsSection = () => {
 
   const pathName = usePathname();
   const { name, unseenMessages } = useMessages();
-  const { startCall, leaveCall, localStream, remoteStreams } = useCall();
 
   return (
     <div className='w-full h-full'>
