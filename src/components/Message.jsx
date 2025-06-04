@@ -3,6 +3,7 @@ import { AvatarContainer } from "./AvatarContainer";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Dialog, DialogContent, DialogDescription, DialogTrigger } from "./ui/dialog";
+import { Download } from "lucide-react";
 
 const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
 
@@ -110,6 +111,25 @@ const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
                 ) ) }
               </div>
             ) }
+            { !!msg.files?.length && (
+              <div className="flex flex-col gap-4 p-3">
+                { msg.files.map( ( item, i ) => (
+                  <>
+                    <a
+                      key={ i }
+                      href={ item }
+                      download={ item?.name }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 font-medium transition-colors duration-200 group"
+                    >
+                      <span className="truncate !whitespace-normal">{ item?.name }</span>
+                      <Download className="w-4 h-4 group-hover:translate-y-0.5 transition-transform duration-200" />
+                    </a>
+                  </>
+                ) ) }
+              </div>
+            ) }
             <div className="relative flex items-start group max-w-full">
               <p className="msg text-[0.8rem] leading-[1.24rem] break-all max-w-full">
                 { msg.value }
@@ -170,6 +190,25 @@ const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
                     </DialogContent>
                   </Dialog>
                   // </>
+                ) ) }
+              </div>
+            ) }
+            { !!msg.files?.length && (
+              <div className="flex flex-col gap-4 p-3">
+                { msg.files.map( ( item, i ) => (
+                  <>
+                    <a
+                      key={ i }
+                      href={ item?.data }
+                      download={ item?.name }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 font-medium transition-colors duration-200 group"
+                    >
+                      <span className="truncate !whitespace-normal">{ item?.name }</span>
+                      <Download className="w-4 h-4 group-hover:translate-y-0.5 transition-transform duration-200" />
+                    </a>
+                  </>
                 ) ) }
               </div>
             ) }

@@ -18,7 +18,7 @@ const Messages = ( { children } ) => {
   const [ totalUsers, setTotalUsers ] = useState( [] );
 
 
-  function showNotification ( title, options ) {
+  function showNotification( title, options ) {
     console.log( "Attempting to show notification:", title, options );
 
     if ( Notification.permission === 'granted' ) {
@@ -29,7 +29,7 @@ const Messages = ( { children } ) => {
 
   useEffect( () => {
 
-    function requestNotificationPermission () {
+    function requestNotificationPermission() {
       if ( 'Notification' in window ) {
         Notification.requestPermission().then( ( permission ) => {
           if ( permission === 'granted' ) {
@@ -48,8 +48,8 @@ const Messages = ( { children } ) => {
 
     socket.connect();
 
-    socket.on( "msg", ( msg, fromID, fromName, media, audio, date ) => {
-      setMsgs( prev => ( [ ...prev, { value: msg, fromID, fromName, media, audio, type: "msg", date } ] ) );
+    socket.on( "msg", ( msg, fromID, fromName, media, audio, date, files ) => {
+      setMsgs( prev => ( [ ...prev, { value: msg, fromID, fromName, media, audio, type: "msg", date, files } ] ) );
     } );
 
     socket.on( "totalUsers", setTotalUsers );

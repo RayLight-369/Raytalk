@@ -7,7 +7,7 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { useMessages } from '@/Contexts/Messages';
 import { cn } from '@/lib/utils';
 import { socket } from '@/socketio';
-import { EllipsisVertical, Link, Mic, MicIcon, Send, Square, X } from 'lucide-react';
+import { EllipsisVertical, FileText, Link, Mic, MicIcon, Send, Square, X } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
@@ -27,6 +27,30 @@ const AudioPreview = memo( ( { audio_, setAudio } ) => (
                 <audio controls src={ URL.createObjectURL( new Blob( [ item ], { type: item.type } ) ) } className='w-[calc(100%-25px)]' />
                 <X className='text-background bg-foreground rounded-full border p-1 absolute top-1 right-1 hover:scale-105' onClick={ () => {
                   setAudio( prev => prev.filter( ( _, j ) => i != j ) );
+                } } />
+              </div>
+            ) ) }
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+      </div>
+    ) }
+  </>
+) );
+
+const FilePreview = memo( ( { files_, setFiles } ) => (
+  <>
+    { !!files_.length && (
+      <div className='flex items-center gap-3 p-1 rounded-lg h-32 w-fit max-w-full'>
+        <ScrollArea className="w-full h-full whitespace-nowrap rounded-md [&>*>*]:h-full">
+          <div className='flex h-full gap-3 py-3 px-4 items-center'>
+            { files_.map( ( item, i ) => (
+              <div id="file" className='w-36 h-full relative' key={ i }>
+                {/* <audio controls src={ URL.createObjectURL( new Blob( [ item ], { type: item.type } ) ) } className='w-[calc(100%-25px)]' /> */ }
+                {/* <FileText className='text-background bg-foreground rounded-full border p-1 absolute top-1 right-1 hover:scale-105' /> */ }
+                <FileText className='w-[calc(100%-45px)] h-auto aspect-square' /><p>{ item?.name }</p>
+                <X className='text-background bg-foreground rounded-full border p-1 absolute top-1 right-1 hover:scale-105' onClick={ () => {
+                  setFiles( prev => prev.filter( ( _, j ) => i != j ) );
                 } } />
               </div>
             ) ) }
@@ -83,6 +107,7 @@ const page = () => {
   const typingTimeoutRef = useRef( null );
   const [ media, setMedia ] = useState( [] );
   const [ audio, setAudio ] = useState( [] );
+  const [ files, setFiles ] = useState( [] );
   const [ isRecording, setIsRecording ] = useState( false );
   const [ audioBlob, setAudioBlob ] = useState( null );
   const mediaRecorderRef = useRef( null );
@@ -128,6 +153,7 @@ const page = () => {
   const handlePaste = async ( e ) => {
 
     const items = e.type == "paste" ? e.clipboardData.items : e.target.files;
+    console.log( items );
 
     if ( e.type != "paste" && items.length > 9 - media.length ) {
       alert( "You can send a total of 9 images." );
@@ -169,6 +195,44 @@ const page = () => {
         } catch ( error ) {
           console.error( "Error compressing the image:", error );
         }
+      } else {
+        const File = e.type == "paste" ? item.getAsFile() : item;
+        console.log( item, File );
+        const reader = new FileReader();
+
+        const options = {
+          maxSizeMB: 0.5,
+          maxWidthOrHeight: 1024,
+          useWebWorker: true,
+        };
+
+        try {
+          // const compressedFile = await imageCompression( imageFile, options );
+          // const reader = new FileReader();
+          // reader.onload = ( e ) => {
+          //   console.log( e.target.result );
+
+          reader.onload = ( e ) => {
+            console.log( e.target?.result );
+            if ( files.length < 9 ) {
+              setFiles( prev => {
+                if ( prev.length < 9 ) {
+                  return [ { data: e.target?.result, name: File?.name }, ...prev ];
+                } else {
+                  alert( "vey bas kar de..." );
+                  return [ ...prev ];
+                }
+              } );
+            }
+          };
+
+          reader.readAsDataURL( File );
+
+          // };
+          // reader.readAsDataURL( compressedFile );
+        } catch ( error ) {
+          console.error( "Error compressing the image:", error );
+        }
       }
     }
   };
@@ -189,11 +253,12 @@ const page = () => {
   };
 
   const handleInput = ( e ) => {
-    if ( e.key == "Enter" && ( ( e.target?.value?.trim()?.length || inputValue.trim().length ) || media.length || audio.length ) ) {
-      socket.emit( "msg", inputValue, socket.id, name, media, audio, new Date().toISOString() );
+    if ( e.key == "Enter" && ( ( e.target?.value?.trim()?.length || inputValue.trim().length ) || media.length || audio.length || files.length ) ) {
+      socket.emit( "msg", inputValue, socket.id, name, media, audio, new Date().toISOString(), files );
       socket.emit( "stop typing", name );
       setMedia( [] );
       setAudio( [] );
+      setFiles( [] );
       setInput( "" );
     }
   };
@@ -324,13 +389,15 @@ const page = () => {
         <div className={ cn( 'flex flex-col gap-3 w-full bg-background p-2 rounded-md', media.length || audio.length ? "border" : "border-none" ) }>
 
           <MediaPreview media_={ media } setMedia={ setMedia } />
+          <FilePreview files_={ files } setFiles={ setFiles } />
           <AudioPreview audio_={ audio } setAudio={ setAudio } />
+
 
           <div className='w-full flex gap-3 relative z-10'>
             <label htmlFor="media-input" className={ "p-0 h-full flex items-center justify-center w-auto aspect-square rounded-full bg-foreground text-background cursor-pointer" }>
               <Link className='text-sm w-[20px] aspect-square text-background' />
             </label>
-            <input type="file" name="media-input" id="media-input" className='hidden' multiple accept='image/*' max={ 9 - media.length } onChange={ handlePaste } />
+            <input type="file" name="media-input" id="media-input" className='hidden' multiple max={ 9 - ( media.length + audio.length + files.length ) } onChange={ handlePaste } />
             <div className='relative w-full flex items-center'>
               <input
                 onKeyDown={ handleInput }
