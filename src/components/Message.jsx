@@ -203,7 +203,7 @@ const Message = ( { msg, socket, displayMode, previousMsgFromSameUser } ) => {
                       download={ item?.name }
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 font-medium transition-colors duration-200 group"
+                      className="inline-flex p-2 rounded-md items-center gap-2 font-medium transition-colors duration-200 group"
                     >
                       <span className="truncate !whitespace-normal">{ item?.name }</span>
                       <Download className="w-4 h-4 group-hover:translate-y-0.5 transition-transform duration-200" />
